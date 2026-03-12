@@ -1,0 +1,7 @@
+name = "f1-live-proxy"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# This tells Cloudflare to use the newer ES module format (required for WebSocket support)
+[build]
+command = ""
