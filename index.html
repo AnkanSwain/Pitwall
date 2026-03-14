@@ -1,33 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>F1 Live Timing</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&family=Share+Tech+Mono&display=swap"
+    rel="stylesheet" />
 
   <style>
     /* ── Reset & Base ───────────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --f1-red:     #e10600;
-      --f1-white:   #ffffff;
-      --bg:         #080808;
-      --surface:    #111111;
-      --surface2:   #1a1a1a;
-      --border:     #2a2a2a;
-      --text:       #e8e8e8;
-      --text-dim:   #666;
-      --green:      #00d2be;
-      --yellow:     #ffd700;
-      --purple:     #9b59b6;
-      --font-main:  'Titillium Web', sans-serif;
-      --font-mono:  'Share Tech Mono', monospace;
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    html, body {
+    :root {
+      --f1-red: #e10600;
+      --f1-white: #ffffff;
+      --bg: #080808;
+      --surface: #111111;
+      --surface2: #1a1a1a;
+      --border: #2a2a2a;
+      --text: #e8e8e8;
+      --text-dim: #666;
+      --green: #00d2be;
+      --yellow: #ffd700;
+      --purple: #9b59b6;
+      --font-main: 'Titillium Web', sans-serif;
+      --font-mono: 'Share Tech Mono', monospace;
+    }
+
+    html,
+    body {
       height: 100%;
       overflow: hidden;
       background: var(--bg);
@@ -64,19 +74,24 @@
       align-items: center;
       gap: 10px;
     }
+
     .logo-bar {
       width: 4px;
       height: 24px;
       background: var(--f1-red);
       border-radius: 2px;
     }
+
     .logo-text {
       font-size: 18px;
       font-weight: 700;
       letter-spacing: 0.05em;
       color: var(--f1-white);
     }
-    .logo-text span { color: var(--f1-red); }
+
+    .logo-text span {
+      color: var(--f1-red);
+    }
 
     #session-info {
       display: flex;
@@ -84,6 +99,7 @@
       gap: 16px;
       margin-left: 8px;
     }
+
     .session-badge {
       font-size: 11px;
       font-weight: 600;
@@ -95,16 +111,19 @@
       border: 1px solid var(--border);
       color: var(--text-dim);
     }
+
     .session-badge.live {
       background: rgba(225, 6, 0, 0.15);
       border-color: var(--f1-red);
       color: var(--f1-red);
     }
+
     #session-name {
       font-size: 13px;
       font-weight: 600;
       color: var(--text);
     }
+
     #lap-counter {
       font-family: var(--font-mono);
       font-size: 13px;
@@ -121,11 +140,36 @@
       border-radius: 2px;
       transition: all 0.3s;
     }
-    .status-green  { background: rgba(0,210,190,0.15); color: var(--green); border: 1px solid var(--green); }
-    .status-yellow { background: rgba(255,215,0,0.15); color: var(--yellow); border: 1px solid var(--yellow); }
-    .status-red    { background: rgba(225,6,0,0.2);   color: var(--f1-red); border: 1px solid var(--f1-red); }
-    .status-sc     { background: rgba(255,215,0,0.2); color: var(--yellow); border: 1px solid var(--yellow); }
-    .status-vsc    { background: rgba(255,215,0,0.1); color: var(--yellow); border: 1px solid var(--yellow); }
+
+    .status-green {
+      background: rgba(0, 210, 190, 0.15);
+      color: var(--green);
+      border: 1px solid var(--green);
+    }
+
+    .status-yellow {
+      background: rgba(255, 215, 0, 0.15);
+      color: var(--yellow);
+      border: 1px solid var(--yellow);
+    }
+
+    .status-red {
+      background: rgba(225, 6, 0, 0.2);
+      color: var(--f1-red);
+      border: 1px solid var(--f1-red);
+    }
+
+    .status-sc {
+      background: rgba(255, 215, 0, 0.2);
+      color: var(--yellow);
+      border: 1px solid var(--yellow);
+    }
+
+    .status-vsc {
+      background: rgba(255, 215, 0, 0.1);
+      color: var(--yellow);
+      border: 1px solid var(--yellow);
+    }
 
     #connect-btn {
       background: var(--f1-red);
@@ -142,9 +186,22 @@
       transition: background 0.2s;
       margin-left: auto;
     }
-    #connect-btn:hover { background: #c00400; }
-    #connect-btn:disabled { background: #3a3a3a; color: #666; cursor: not-allowed; }
-    #connect-btn.connected { background: #1a3a1a; color: var(--green); border: 1px solid var(--green); }
+
+    #connect-btn:hover {
+      background: #c00400;
+    }
+
+    #connect-btn:disabled {
+      background: #3a3a3a;
+      color: #666;
+      cursor: not-allowed;
+    }
+
+    #connect-btn.connected {
+      background: #1a3a1a;
+      color: var(--green);
+      border: 1px solid var(--green);
+    }
 
     /* ── Map Area ───────────────────────────────────────────────────── */
     #map-area {
@@ -156,23 +213,28 @@
 
     #track-canvas {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
     }
 
     #no-session {
       position: absolute;
-      top: 50%; left: 50%;
+      top: 50%;
+      left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
       pointer-events: none;
     }
+
     #no-session h2 {
       font-size: 22px;
       font-weight: 700;
       color: var(--text-dim);
       margin-bottom: 8px;
     }
+
     #no-session p {
       font-size: 13px;
       color: #444;
@@ -186,7 +248,10 @@
       overflow-y: auto;
       scrollbar-width: none;
     }
-    #timing-tower::-webkit-scrollbar { display: none; }
+
+    #timing-tower::-webkit-scrollbar {
+      display: none;
+    }
 
     .panel-header {
       padding: 8px 12px;
@@ -200,6 +265,7 @@
       align-items: center;
       gap: 6px;
     }
+
     .panel-header::before {
       content: '';
       display: block;
@@ -215,11 +281,14 @@
       gap: 4px;
       align-items: center;
       padding: 5px 10px;
-      border-bottom: 1px solid rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
       font-size: 11px;
       transition: background 0.15s;
     }
-    .timing-row:hover { background: var(--surface2); }
+
+    .timing-row:hover {
+      background: var(--surface2);
+    }
 
     .t-pos {
       font-family: var(--font-mono);
@@ -227,6 +296,7 @@
       color: var(--text-dim);
       text-align: right;
     }
+
     .t-num {
       font-family: var(--font-mono);
       font-size: 10px;
@@ -235,6 +305,7 @@
       border-radius: 2px;
       font-weight: 700;
     }
+
     .t-name {
       font-size: 11px;
       font-weight: 600;
@@ -243,12 +314,14 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
     .t-gap {
       font-family: var(--font-mono);
       font-size: 10px;
       color: var(--text-dim);
       text-align: right;
     }
+
     .t-tyre {
       font-size: 9px;
       font-weight: 700;
@@ -259,12 +332,42 @@
       align-items: center;
       justify-content: center;
     }
-    .tyre-S { background: rgba(225,6,0,0.25); color: #ff4444; border: 1px solid #ff4444; }
-    .tyre-M { background: rgba(255,215,0,0.2); color: #ffd700; border: 1px solid #ffd700; }
-    .tyre-H { background: rgba(255,255,255,0.1); color: #ccc; border: 1px solid #666; }
-    .tyre-I { background: rgba(0,100,255,0.2); color: #4488ff; border: 1px solid #4488ff; }
-    .tyre-W { background: rgba(0,200,255,0.2); color: #00c8ff; border: 1px solid #00c8ff; }
-    .tyre-? { background: rgba(100,100,100,0.2); color: #888; border: 1px solid #555; }
+
+    .tyre-S {
+      background: rgba(225, 6, 0, 0.25);
+      color: #ff4444;
+      border: 1px solid #ff4444;
+    }
+
+    .tyre-M {
+      background: rgba(255, 215, 0, 0.2);
+      color: #ffd700;
+      border: 1px solid #ffd700;
+    }
+
+    .tyre-H {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ccc;
+      border: 1px solid #666;
+    }
+
+    .tyre-I {
+      background: rgba(0, 100, 255, 0.2);
+      color: #4488ff;
+      border: 1px solid #4488ff;
+    }
+
+    .tyre-W {
+      background: rgba(0, 200, 255, 0.2);
+      color: #00c8ff;
+      border: 1px solid #00c8ff;
+    }
+
+    .tyre-? {
+      background: rgba(100, 100, 100, 0.2);
+      color: #888;
+      border: 1px solid #555;
+    }
 
     /* ── Race Control ───────────────────────────────────────────────── */
     #race-control {
@@ -274,15 +377,17 @@
       flex-direction: column;
       overflow: hidden;
     }
+
     #rc-messages {
       overflow-y: auto;
       flex: 1;
       scrollbar-width: thin;
       scrollbar-color: var(--border) transparent;
     }
+
     .rc-msg {
       padding: 5px 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
       font-size: 10px;
       line-height: 1.4;
       display: flex;
@@ -290,10 +395,19 @@
       align-items: flex-start;
       animation: rcSlideIn 0.3s ease;
     }
+
     @keyframes rcSlideIn {
-      from { opacity: 0; transform: translateX(-6px); }
-      to   { opacity: 1; transform: translateX(0); }
+      from {
+        opacity: 0;
+        transform: translateX(-6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
+
     .rc-time {
       font-family: var(--font-mono);
       font-size: 9px;
@@ -301,12 +415,30 @@
       white-space: nowrap;
       padding-top: 1px;
     }
-    .rc-text { color: var(--text); }
-    .rc-flag-YELLOW .rc-text { color: var(--yellow); }
-    .rc-flag-RED    .rc-text { color: var(--f1-red); }
-    .rc-flag-GREEN  .rc-text { color: var(--green); }
-    .rc-flag-SC     .rc-text { color: var(--yellow); }
-    .rc-flag-VSC    .rc-text { color: var(--yellow); }
+
+    .rc-text {
+      color: var(--text);
+    }
+
+    .rc-flag-YELLOW .rc-text {
+      color: var(--yellow);
+    }
+
+    .rc-flag-RED .rc-text {
+      color: var(--f1-red);
+    }
+
+    .rc-flag-GREEN .rc-text {
+      color: var(--green);
+    }
+
+    .rc-flag-SC .rc-text {
+      color: var(--yellow);
+    }
+
+    .rc-flag-VSC .rc-text {
+      color: var(--yellow);
+    }
 
     /* ── Connection overlay ─────────────────────────────────────────── */
     #status-dot {
@@ -317,13 +449,30 @@
       transition: background 0.3s;
       flex-shrink: 0;
     }
-    #status-dot.connecting { background: var(--yellow); animation: pulse 1s infinite; }
-    #status-dot.connected  { background: var(--green); }
-    #status-dot.error      { background: var(--f1-red); }
+
+    #status-dot.connecting {
+      background: var(--yellow);
+      animation: pulse 1s infinite;
+    }
+
+    #status-dot.connected {
+      background: var(--green);
+    }
+
+    #status-dot.error {
+      background: var(--f1-red);
+    }
 
     @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.3; }
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
     }
 
     #status-text {
@@ -332,561 +481,578 @@
     }
   </style>
 </head>
+
 <body>
 
-<div id="app">
+  <div id="app">
 
-  <!-- ── Header ────────────────────────────────────────────────────── -->
-  <header id="header">
-    <div class="logo">
-      <div class="logo-bar"></div>
-      <div class="logo-text">F1 <span>LIVE</span></div>
-    </div>
+    <!-- ── Header ────────────────────────────────────────────────────── -->
+    <header id="header">
+      <div class="logo">
+        <div class="logo-bar"></div>
+        <div class="logo-text">F1 <span>LIVE</span></div>
+      </div>
 
-    <div id="session-info">
-      <div id="live-badge" class="session-badge">Offline</div>
-      <div id="session-name">—</div>
-      <div id="lap-counter"></div>
-    </div>
+      <div id="session-info">
+        <div id="live-badge" class="session-badge">Offline</div>
+        <div id="session-name">—</div>
+        <div id="lap-counter"></div>
+      </div>
 
-    <div id="track-status-badge" class="status-green">All Clear</div>
+      <div id="track-status-badge" class="status-green">All Clear</div>
 
-    <div id="status-dot"></div>
-    <div id="status-text">Not connected</div>
+      <div id="status-dot"></div>
+      <div id="status-text">Not connected</div>
 
-    <button id="connect-btn" onclick="connectToF1()">Connect</button>
-  </header>
+      <button id="connect-btn" onclick="connectToF1()">Connect</button>
+    </header>
 
-  <!-- ── Track Map ──────────────────────────────────────────────────── -->
-  <main id="map-area">
-    <canvas id="track-canvas"></canvas>
-    <div id="no-session">
-      <h2>No Live Session</h2>
-      <p>Click Connect to watch for an active F1 session. Data streams during practice, qualifying, and races.</p>
-    </div>
-  </main>
+    <!-- ── Track Map ──────────────────────────────────────────────────── -->
+    <main id="map-area">
+      <canvas id="track-canvas"></canvas>
+      <div id="no-session">
+        <h2>No Live Session</h2>
+        <p>Click Connect to watch for an active F1 session. Data streams during practice, qualifying, and races.</p>
+      </div>
+    </main>
 
-  <!-- ── Timing Tower ──────────────────────────────────────────────── -->
-  <aside id="timing-tower">
-    <div class="panel-header">Timing Tower</div>
-    <div id="timing-rows"></div>
-  </aside>
+    <!-- ── Timing Tower ──────────────────────────────────────────────── -->
+    <aside id="timing-tower">
+      <div class="panel-header">Timing Tower</div>
+      <div id="timing-rows"></div>
+    </aside>
 
-  <!-- ── Race Control ──────────────────────────────────────────────── -->
-  <section id="race-control">
-    <div class="panel-header">Race Control</div>
-    <div id="rc-messages"></div>
-  </section>
+    <!-- ── Race Control ──────────────────────────────────────────────── -->
+    <section id="race-control">
+      <div class="panel-header">Race Control</div>
+      <div id="rc-messages"></div>
+    </section>
 
-</div>
+  </div>
 
-<script>
-// ═══════════════════════════════════════════════════════════════════════════════
-// CONFIGURATION
-// ═══════════════════════════════════════════════════════════════════════════════
+  <script>
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // CONFIGURATION
+    // ═══════════════════════════════════════════════════════════════════════════════
 
-// !! IMPORTANT: Replace this with your Cloudflare Worker URL after deploying !!
-// It will look something like: https://f1-live-proxy.YOUR-NAME.workers.dev
-const WORKER_URL = "https://itwall.pitwall-f1.workers.dev";
+    // !! IMPORTANT: Replace this with your Cloudflare Worker URL after deploying !!
+    // It will look something like: https://f1-live-proxy.YOUR-NAME.workers.dev
+    const WORKER_URL = "https://itwall.pitwall-f1.workers.dev";
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // STATE
+    // ═══════════════════════════════════════════════════════════════════════════════
 
-const state = {
-  drivers: {},        // { driverNumber: { name, tla, teamColour, ... } }
-  positions: {},      // { driverNumber: { x, y, status } }
-  timing: {},         // { driverNumber: { position, gap, lapTime } }
-  stints: {},         // { driverNumber: { compound, laps } }
-  positionBounds: { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity },
-  trackPoints: [],    // all historical position points for drawing the track outline
-  connected: false,
-  ws: null,
-};
+    const state = {
+      drivers: {},        // { driverNumber: { name, tla, teamColour, ... } }
+      positions: {},      // { driverNumber: { x, y, status } }
+      timing: {},         // { driverNumber: { position, gap, lapTime } }
+      stints: {},         // { driverNumber: { compound, laps } }
+      positionBounds: { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity },
+      trackPoints: [],    // all historical position points for drawing the track outline
+      connected: false,
+      ws: null,
+    };
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// CANVAS SETUP
-// ═══════════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // CANVAS SETUP
+    // ═══════════════════════════════════════════════════════════════════════════════
 
-const canvas = document.getElementById("track-canvas");
-const ctx = canvas.getContext("2d");
+    const canvas = document.getElementById("track-canvas");
+    const ctx = canvas.getContext("2d");
 
-function resizeCanvas() {
-  const rect = canvas.parentElement.getBoundingClientRect();
-  canvas.width = rect.width;
-  canvas.height = rect.height;
-}
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// COORDINATE HELPERS
-// ═══════════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // COORDINATE HELPERS
+    // ═══════════════════════════════════════════════════════════════════════════════
 
-// The F1 position data gives X/Y in a circuit-relative coordinate system.
-// We need to map those onto our canvas pixel coordinates.
-function toCanvas(x, y) {
-  const b = state.positionBounds;
-  const padding = 60;
-  const w = canvas.width  - padding * 2;
-  const h = canvas.height - padding * 2;
+    // The F1 position data gives X/Y in a circuit-relative coordinate system.
+    // We need to map those onto our canvas pixel coordinates.
+    function toCanvas(x, y) {
+      const b = state.positionBounds;
+      const padding = 60;
+      const w = canvas.width - padding * 2;
+      const h = canvas.height - padding * 2;
 
-  const rangeX = b.maxX - b.minX || 1;
-  const rangeY = b.maxY - b.minY || 1;
-  const scale  = Math.min(w / rangeX, h / rangeY);
+      const rangeX = b.maxX - b.minX || 1;
+      const rangeY = b.maxY - b.minY || 1;
+      const scale = Math.min(w / rangeX, h / rangeY);
 
-  const cx = padding + (rangeX - (rangeX - (x - b.minX))) * scale + (w - rangeX * scale) / 2;
-  const cy = padding + (y - b.minY) * scale + (h - rangeY * scale) / 2;
+      const cx = padding + (rangeX - (rangeX - (x - b.minX))) * scale + (w - rangeX * scale) / 2;
+      const cy = padding + (y - b.minY) * scale + (h - rangeY * scale) / 2;
 
-  return { cx, cy };
-}
-
-function updateBounds(x, y) {
-  const b = state.positionBounds;
-  b.minX = Math.min(b.minX, x);
-  b.maxX = Math.max(b.maxX, x);
-  b.minY = Math.min(b.minY, y);
-  b.maxY = Math.max(b.maxY, y);
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// DRAWING
-// ═══════════════════════════════════════════════════════════════════════════════
-
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  const hasData = Object.keys(state.positions).length > 0;
-  document.getElementById("no-session").style.display = hasData ? "none" : "block";
-
-  if (!hasData) return;
-
-  // Draw track outline from historical position data
-  drawTrackOutline();
-
-  // Draw cars
-  const driversByPos = Object.values(state.drivers)
-    .sort((a, b) => {
-      const pa = state.timing[a.driverNumber]?.position || 99;
-      const pb = state.timing[b.driverNumber]?.position || 99;
-      return pa - pb;
-    });
-
-  for (const driver of driversByPos) {
-    const pos = state.positions[driver.driverNumber];
-    if (!pos || pos.status === "OffTrack") continue;
-    drawCar(driver, pos);
-  }
-
-  requestAnimationFrame(draw);
-}
-
-function drawTrackOutline() {
-  if (state.trackPoints.length < 20) return;
-
-  // Draw all historical points as tiny dots to form the track shape
-  ctx.save();
-  ctx.globalAlpha = 0.08;
-  ctx.fillStyle = "#ffffff";
-  for (const [x, y] of state.trackPoints) {
-    const { cx, cy } = toCanvas(x, y);
-    ctx.beginPath();
-    ctx.arc(cx, cy, 1.5, 0, Math.PI * 2);
-    ctx.fill();
-  }
-  ctx.restore();
-}
-
-function drawCar(driver, pos) {
-  const { cx, cy } = toCanvas(pos.x, pos.y);
-  const color = "#" + (driver.teamColour || "888888");
-  const tPos = state.timing[driver.driverNumber]?.position || "?";
-
-  // Glow effect
-  const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, 14);
-  grd.addColorStop(0, color + "55");
-  grd.addColorStop(1, "transparent");
-  ctx.fillStyle = grd;
-  ctx.beginPath();
-  ctx.arc(cx, cy, 14, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Car dot
-  ctx.beginPath();
-  ctx.arc(cx, cy, 6, 0, Math.PI * 2);
-  ctx.fillStyle = color;
-  ctx.fill();
-
-  // White outline
-  ctx.beginPath();
-  ctx.arc(cx, cy, 6, 0, Math.PI * 2);
-  ctx.strokeStyle = "rgba(255,255,255,0.6)";
-  ctx.lineWidth = 1;
-  ctx.stroke();
-
-  // Driver label
-  const tla = driver.nameAcronym || driver.driverNumber;
-  const labelX = cx + 10;
-  const labelY = cy - 8;
-
-  // Label background
-  ctx.font = "bold 9px 'Titillium Web', sans-serif";
-  const textWidth = ctx.measureText(tla).width;
-  ctx.fillStyle = "rgba(0,0,0,0.75)";
-  ctx.fillRect(labelX - 2, labelY - 9, textWidth + 10, 12);
-
-  // Position number (small, to the left)
-  ctx.font = "7px 'Share Tech Mono', monospace";
-  ctx.fillStyle = color;
-  ctx.fillText(tPos, labelX, labelY);
-
-  // TLA
-  ctx.font = "bold 9px 'Titillium Web', sans-serif";
-  ctx.fillStyle = "#ffffff";
-  ctx.fillText(tla, labelX + 9, labelY);
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// DATA DECOMPRESSION
-// ═══════════════════════════════════════════════════════════════════════════════
-
-// Position.z and CarData.z are base64-encoded deflate-compressed JSON strings.
-// DecompressionStream is a built-in browser API that handles this natively.
-async function decompress(b64) {
-  try {
-    const binary = atob(b64);
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-
-    const ds     = new DecompressionStream("deflate-raw");
-    const writer = ds.writable.getWriter();
-    const reader = ds.readable.getReader();
-
-    writer.write(bytes);
-    writer.close();
-
-    const chunks = [];
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      chunks.push(value);
+      return { cx, cy };
     }
 
-    const total = new Uint8Array(chunks.reduce((a, c) => a + c.length, 0));
-    let offset = 0;
-    for (const chunk of chunks) { total.set(chunk, offset); offset += chunk.length; }
-
-    return JSON.parse(new TextDecoder().decode(total));
-  } catch (e) {
-    console.warn("Decompress failed:", e.message);
-    return null;
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// DATA PROCESSING
-// ═══════════════════════════════════════════════════════════════════════════════
-
-// Called whenever we receive a chunk of position data.
-// Normalises positions and updates state.
-function processPositions(data) {
-  const entries = data?.Position?.[0]?.Entries ?? data?.Entries ?? data;
-  if (!entries || typeof entries !== "object") return;
-
-  for (const [num, entry] of Object.entries(entries)) {
-    if (entry.X == null || entry.Y == null) continue;
-    const x = entry.X;
-    const y = entry.Y;
-
-    updateBounds(x, y);
-    state.positions[num] = { x, y, status: entry.Status || "OnTrack" };
-
-    // Subsample points for track outline (1 in 10 to keep things fast)
-    if (Math.random() < 0.1) {
-      state.trackPoints.push([x, y]);
-      // Cap at 50,000 points to prevent memory growth
-      if (state.trackPoints.length > 50000) state.trackPoints.splice(0, 5000);
+    function updateBounds(x, y) {
+      const b = state.positionBounds;
+      b.minX = Math.min(b.minX, x);
+      b.maxX = Math.max(b.maxX, x);
+      b.minY = Math.min(b.minY, y);
+      b.maxY = Math.max(b.maxY, y);
     }
-  }
-}
 
-function processDriverList(data) {
-  for (const [num, info] of Object.entries(data)) {
-    if (typeof info !== "object") continue;
-    state.drivers[num] = {
-      driverNumber: num,
-      nameAcronym:  info.Tla || info.NameAcronym || num,
-      fullName:     info.FullName || info.BroadcastName || num,
-      teamColour:   info.TeamColour || "888888",
-      teamName:     info.TeamName || "",
-    };
-  }
-  renderTimingTower();
-}
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // DRAWING
+    // ═══════════════════════════════════════════════════════════════════════════════
 
-function processTimingData(data) {
-  const lines = data?.Lines || data;
-  for (const [num, info] of Object.entries(lines)) {
-    if (typeof info !== "object") continue;
-    state.timing[num] = {
-      ...(state.timing[num] || {}),
-      position: parseInt(info.Position) || state.timing[num]?.position || 99,
-      gap:      info.GapToLeader || state.timing[num]?.gap || "",
-      lapTime:  info.LastLapTime?.Value || state.timing[num]?.lapTime || "",
-    };
-  }
-  renderTimingTower();
-}
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-function processTimingAppData(data) {
-  const lines = data?.Lines || data;
-  for (const [num, info] of Object.entries(lines)) {
-    if (typeof info !== "object") continue;
-    const stints = info.Stints;
-    if (!stints) continue;
-    const lastStint = Array.isArray(stints) ? stints[stints.length - 1] : Object.values(stints).pop();
-    if (lastStint) {
-      state.stints[num] = {
-        compound: lastStint.Compound?.[0] || "?",
-        laps:     lastStint.TotalLaps || 0,
+      const hasData = Object.keys(state.positions).length > 0;
+      document.getElementById("no-session").style.display = hasData ? "none" : "block";
+
+      if (!hasData) return;
+
+      // Draw track outline from historical position data
+      drawTrackOutline();
+
+      // Draw cars
+      const driversByPos = Object.values(state.drivers)
+        .sort((a, b) => {
+          const pa = state.timing[a.driverNumber]?.position || 99;
+          const pb = state.timing[b.driverNumber]?.position || 99;
+          return pa - pb;
+        });
+
+      for (const driver of driversByPos) {
+        const pos = state.positions[driver.driverNumber];
+        if (!pos || pos.status === "OffTrack") continue;
+        drawCar(driver, pos);
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    function drawTrackOutline() {
+      if (state.trackPoints.length < 20) return;
+
+      // Draw all historical points as tiny dots to form the track shape
+      ctx.save();
+      ctx.globalAlpha = 0.08;
+      ctx.fillStyle = "#ffffff";
+      for (const [x, y] of state.trackPoints) {
+        const { cx, cy } = toCanvas(x, y);
+        ctx.beginPath();
+        ctx.arc(cx, cy, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function drawCar(driver, pos) {
+      const { cx, cy } = toCanvas(pos.x, pos.y);
+      const color = "#" + (driver.teamColour || "888888");
+      const tPos = state.timing[driver.driverNumber]?.position || "?";
+
+      // Glow effect
+      const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, 14);
+      grd.addColorStop(0, color + "55");
+      grd.addColorStop(1, "transparent");
+      ctx.fillStyle = grd;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 14, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Car dot
+      ctx.beginPath();
+      ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+
+      // White outline
+      ctx.beginPath();
+      ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(255,255,255,0.6)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Driver label
+      const tla = driver.nameAcronym || driver.driverNumber;
+      const labelX = cx + 10;
+      const labelY = cy - 8;
+
+      // Label background
+      ctx.font = "bold 9px 'Titillium Web', sans-serif";
+      const textWidth = ctx.measureText(tla).width;
+      ctx.fillStyle = "rgba(0,0,0,0.75)";
+      ctx.fillRect(labelX - 2, labelY - 9, textWidth + 10, 12);
+
+      // Position number (small, to the left)
+      ctx.font = "7px 'Share Tech Mono', monospace";
+      ctx.fillStyle = color;
+      ctx.fillText(tPos, labelX, labelY);
+
+      // TLA
+      ctx.font = "bold 9px 'Titillium Web', sans-serif";
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText(tla, labelX + 9, labelY);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // DATA DECOMPRESSION
+    // ═══════════════════════════════════════════════════════════════════════════════
+
+    // Position.z and CarData.z are base64-encoded deflate-compressed JSON strings.
+    // DecompressionStream is a built-in browser API that handles this natively.
+    async function decompress(b64) {
+      try {
+        const binary = atob(b64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+
+        const ds = new DecompressionStream("deflate-raw");
+        const writer = ds.writable.getWriter();
+        const reader = ds.readable.getReader();
+
+        writer.write(bytes);
+        writer.close();
+
+        const chunks = [];
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(value);
+        }
+
+        const total = new Uint8Array(chunks.reduce((a, c) => a + c.length, 0));
+        let offset = 0;
+        for (const chunk of chunks) { total.set(chunk, offset); offset += chunk.length; }
+
+        return JSON.parse(new TextDecoder().decode(total));
+      } catch (e) {
+        console.warn("Decompress failed:", e.message);
+        return null;
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // DATA PROCESSING
+    // ═══════════════════════════════════════════════════════════════════════════════
+
+    // Called whenever we receive a chunk of position data.
+    // Normalises positions and updates state.
+    function processPositions(data) {
+      const entries = data?.Position?.[0]?.Entries ?? data?.Entries ?? data;
+      if (!entries || typeof entries !== "object") return;
+
+      for (const [num, entry] of Object.entries(entries)) {
+        if (entry.X == null || entry.Y == null) continue;
+        const x = entry.X;
+        const y = entry.Y;
+
+        updateBounds(x, y);
+        state.positions[num] = { x, y, status: entry.Status || "OnTrack" };
+
+        // Subsample points for track outline (1 in 10 to keep things fast)
+        if (Math.random() < 0.1) {
+          state.trackPoints.push([x, y]);
+          // Cap at 50,000 points to prevent memory growth
+          if (state.trackPoints.length > 50000) state.trackPoints.splice(0, 5000);
+        }
+      }
+
+      if (Object.keys(state.positions).length > 0 && !window._posLogged) {
+        window._posLogged = true;
+        const first = Object.entries(state.positions)[0];
+      }
+
+      if (Object.keys(state.positions).length > 0 && !window._posLogged) {
+        window._posLogged = true;
+        const first = Object.entries(state.positions)[0];
+      }
+    }
+
+    function processDriverList(data) {
+      for (const [num, info] of Object.entries(data)) {
+        if (typeof info !== "object") continue;
+
+        // Merge with existing driver data instead of overwriting
+        const existing = state.drivers[num] || {};
+        state.drivers[num] = {
+          driverNumber: num,
+          nameAcronym: info.Tla || existing.nameAcronym || num,
+          fullName: info.FullName || existing.fullName || num,
+          teamColour: info.TeamColour || existing.teamColour || "888888",
+          teamName: info.TeamName || existing.teamName || "",
+          headshotUrl: info.HeadshotUrl || existing.headshotUrl || "",
+        };
+      }
+      renderTimingTower();
+    }
+
+    function processTimingData(data) {
+      const lines = data?.Lines || data;
+      for (const [num, info] of Object.entries(lines)) {
+        if (typeof info !== "object") continue;
+        state.timing[num] = {
+          ...(state.timing[num] || {}),
+          position: parseInt(info.Position) || state.timing[num]?.position || 99,
+          gap: info.GapToLeader || state.timing[num]?.gap || "",
+          lapTime: info.LastLapTime?.Value || state.timing[num]?.lapTime || "",
+        };
+      }
+      renderTimingTower();
+    }
+
+    function processTimingAppData(data) {
+      const lines = data?.Lines || data;
+      for (const [num, info] of Object.entries(lines)) {
+        if (typeof info !== "object") continue;
+        const stints = info.Stints;
+        if (!stints) continue;
+        const lastStint = Array.isArray(stints) ? stints[stints.length - 1] : Object.values(stints).pop();
+        if (lastStint) {
+          const raw = lastStint.Compound || "";
+          state.stints[num] = {
+            compound: (raw === "UNKNOWN" || raw === "") ? "-" : raw[0],
+            laps: lastStint.TotalLaps || 0,
+          };
+        }
+      }
+      renderTimingTower();
+    }
+
+    function processTrackStatus(data) {
+      const status = data?.Status;
+      const badge = document.getElementById("track-status-badge");
+      const map = {
+        "1": ["All Clear", "status-green"],
+        "2": ["Yellow Flag", "status-yellow"],
+        "3": ["Flag", "status-yellow"],
+        "4": ["Safety Car", "status-sc"],
+        "5": ["Red Flag", "status-red"],
+        "6": ["Virt. Safety Car", "status-vsc"],
+        "7": ["Virt. Safety Car", "status-vsc"],
       };
+      const [label, cls] = map[status] || ["Unknown", "status-green"];
+      badge.textContent = label;
+      badge.className = ""; // clear old classes
+      badge.id = "track-status-badge";
+      badge.classList.add(cls);
     }
-  }
-  renderTimingTower();
-}
 
-function processTrackStatus(data) {
-  const status = data?.Status;
-  const badge  = document.getElementById("track-status-badge");
-  const map = {
-    "1": ["All Clear",      "status-green"],
-    "2": ["Yellow Flag",    "status-yellow"],
-    "3": ["Flag",           "status-yellow"],
-    "4": ["Safety Car",     "status-sc"],
-    "5": ["Red Flag",       "status-red"],
-    "6": ["Virt. Safety Car","status-vsc"],
-    "7": ["Virt. Safety Car","status-vsc"],
-  };
-  const [label, cls] = map[status] || ["Unknown", "status-green"];
-  badge.textContent = label;
-  badge.className   = ""; // clear old classes
-  badge.id          = "track-status-badge";
-  badge.classList.add(cls);
-}
+    function processRaceControl(data) {
+      const messages = data?.Messages || (Array.isArray(data) ? data : Object.values(data));
+      if (!Array.isArray(messages)) return;
 
-function processRaceControl(data) {
-  const messages = data?.Messages || (Array.isArray(data) ? data : Object.values(data));
-  if (!Array.isArray(messages)) return;
+      const container = document.getElementById("rc-messages");
+      // Only process the most recent message each time
+      const recent = messages[messages.length - 1];
+      if (!recent?.Message) return;
 
-  const container = document.getElementById("rc-messages");
-  // Only process the most recent message each time
-  const recent = messages[messages.length - 1];
-  if (!recent?.Message) return;
+      const time = recent.Utc?.split("T")[1]?.split(".")[0] || "";
+      const flag = recent.Flag || "";
+      const div = document.createElement("div");
+      div.className = `rc-msg rc-flag-${flag}`;
+      div.innerHTML = `<span class="rc-time">${time}</span><span class="rc-text">${recent.Message}</span>`;
+      container.prepend(div);
 
-  const time = recent.Utc?.split("T")[1]?.split(".")[0] || "";
-  const flag = recent.Flag || "";
-  const div  = document.createElement("div");
-  div.className = `rc-msg rc-flag-${flag}`;
-  div.innerHTML = `<span class="rc-time">${time}</span><span class="rc-text">${recent.Message}</span>`;
-  container.prepend(div);
+      // Keep max 50 messages
+      while (container.children.length > 50) container.removeChild(container.lastChild);
+    }
 
-  // Keep max 50 messages
-  while (container.children.length > 50) container.removeChild(container.lastChild);
-}
+    function processSessionInfo(data) {
+      const name = data?.Name || data?.Meeting?.Name || "";
+      if (name) {
+        document.getElementById("session-name").textContent = name;
+        const badge = document.getElementById("live-badge");
+        badge.textContent = "Live";
+        badge.classList.add("live");
+      }
+    }
 
-function processSessionInfo(data) {
-  const name = data?.Name || data?.Meeting?.Name || "";
-  if (name) {
-    document.getElementById("session-name").textContent = name;
-    const badge = document.getElementById("live-badge");
-    badge.textContent = "Live";
-    badge.classList.add("live");
-  }
-}
+    function processLapCount(data) {
+      const current = data?.CurrentLap;
+      const total = data?.TotalLaps;
+      if (current != null) {
+        document.getElementById("lap-counter").textContent =
+          total ? `LAP ${current}/${total}` : `LAP ${current}`;
+      }
+    }
 
-function processLapCount(data) {
-  const current = data?.CurrentLap;
-  const total   = data?.TotalLaps;
-  if (current != null) {
-    document.getElementById("lap-counter").textContent =
-      total ? `LAP ${current}/${total}` : `LAP ${current}`;
-  }
-}
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // TIMING TOWER RENDER
+    // ═══════════════════════════════════════════════════════════════════════════════
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// TIMING TOWER RENDER
-// ═══════════════════════════════════════════════════════════════════════════════
+    function renderTimingTower() {
+      const container = document.getElementById("timing-rows");
+      const sorted = Object.values(state.drivers).sort((a, b) => {
+        const pa = state.timing[a.driverNumber]?.position || 99;
+        const pb = state.timing[b.driverNumber]?.position || 99;
+        return pa - pb;
+      });
 
-function renderTimingTower() {
-  const container = document.getElementById("timing-rows");
-  const sorted = Object.values(state.drivers).sort((a, b) => {
-    const pa = state.timing[a.driverNumber]?.position || 99;
-    const pb = state.timing[b.driverNumber]?.position || 99;
-    return pa - pb;
-  });
+      container.innerHTML = "";
+      for (const driver of sorted) {
+        const t = state.timing[driver.driverNumber] || {};
+        const s = state.stints[driver.driverNumber];
+        const color = "#" + driver.teamColour;
+        const tyre = s?.compound || "-";
+        const tyreClass = `tyre-${tyre}`;
 
-  container.innerHTML = "";
-  for (const driver of sorted) {
-    const t = state.timing[driver.driverNumber] || {};
-    const s = state.stints[driver.driverNumber];
-    const color  = "#" + driver.teamColour;
-    const tyre   = s?.compound || "?";
-    const tyreClass = `tyre-${tyre}`;
-
-    const row = document.createElement("div");
-    row.className = "timing-row";
-    row.innerHTML = `
+        const row = document.createElement("div");
+        row.className = "timing-row";
+        row.innerHTML = `
       <div class="t-pos">${t.position || ""}</div>
       <div class="t-num" style="background:${color}22;color:${color};border:1px solid ${color}44">${driver.driverNumber}</div>
       <div class="t-name">${driver.nameAcronym}</div>
       <div class="t-gap">${t.gap || ""}</div>
       <div class="t-tyre ${tyreClass}">${tyre}</div>
     `;
-    container.appendChild(row);
-  }
-}
+        container.appendChild(row);
+      }
+    }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// SIGNALR CONNECTION
-// ═══════════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // SIGNALR CONNECTION
+    // ═══════════════════════════════════════════════════════════════════════════════
 
-// Topics we want to receive from F1's stream
-const TOPICS = [
-  "Heartbeat", "DriverList", "Position.z", "CarData.z",
-  "TimingData", "TimingAppData", "TrackStatus",
-  "RaceControlMessages", "SessionInfo", "LapCount",
-];
+    // Topics we want to receive from F1's stream
+    const TOPICS = [
+      "Heartbeat", "DriverList", "Position.z", "CarData.z",
+      "TimingData", "TimingAppData", "TrackStatus",
+      "RaceControlMessages", "SessionInfo", "LapCount",
+    ];
 
-function setStatus(state, text) {
-  const dot  = document.getElementById("status-dot");
-  const txt  = document.getElementById("status-text");
-  const btn  = document.getElementById("connect-btn");
-  dot.className = state;
-  txt.textContent = text;
-  if (state === "connected") { btn.textContent = "Disconnect"; btn.className = "connected"; }
-  else if (state === "connecting") { btn.textContent = "Connecting…"; btn.disabled = true; }
-  else { btn.textContent = "Connect"; btn.disabled = false; btn.className = ""; }
-}
+    function setStatus(state, text) {
+      const dot = document.getElementById("status-dot");
+      const txt = document.getElementById("status-text");
+      const btn = document.getElementById("connect-btn");
+      dot.className = state;
+      txt.textContent = text;
+      if (state === "connected") { btn.textContent = "Disconnect"; btn.className = "connected"; }
+      else if (state === "connecting") { btn.textContent = "Connecting…"; btn.disabled = true; }
+      else { btn.textContent = "Connect"; btn.disabled = false; btn.className = ""; }
+    }
 
-async function connectToF1() {
-  if (state.connected) { disconnect(); return; }
+    async function connectToF1() {
+      if (state.connected) { disconnect(); return; }
 
-  if (!WORKER_URL || WORKER_URL.includes("YOUR-NAME")) {
-    alert("Please set your Cloudflare Worker URL in the WORKER_URL variable at the top of this file.");
-    return;
-  }
+      if (!WORKER_URL || WORKER_URL.includes("YOUR-NAME")) {
+        alert("Please set your Cloudflare Worker URL in the WORKER_URL variable at the top of this file.");
+        return;
+      }
 
-  setStatus("connecting", "Negotiating…");
+      setStatus("connecting", "Negotiating…");
 
-  try {
-    // ── Step 1: Negotiate ──────────────────────────────────────────────
-    // Ask the server for a ConnectionToken and a session Cookie.
-    const hub = encodeURIComponent(JSON.stringify([{ name: "Streaming" }]));
-    const negotiateUrl = `${WORKER_URL}/signalr/negotiate?connectionData=${hub}&clientProtocol=1.5`;
-    const res  = await fetch(negotiateUrl);
-    const data = await res.json();
+      try {
+        // ── Step 1: Negotiate ──────────────────────────────────────────────
+        // Ask the server for a ConnectionToken and a session Cookie.
+        const hub = encodeURIComponent(JSON.stringify([{ name: "Streaming" }]));
+        const negotiateUrl = `${WORKER_URL}/signalr/negotiate?connectionData=${hub}&clientProtocol=1.5`;
+        const res = await fetch(negotiateUrl);
+        const data = await res.json();
 
-    const token  = encodeURIComponent(data.ConnectionToken);
-    const cookie = encodeURIComponent(data._f1Cookie || "");
+        const token = encodeURIComponent(data.ConnectionToken);
+        const cookie = encodeURIComponent(data._f1Cookie || "");
 
-    // ── Step 2: Open WebSocket ─────────────────────────────────────────
-    // Connect to the stream, passing the token and cookie via query params
-    // (the Worker will extract and use the cookie when connecting to F1).
-    const wsBase = WORKER_URL.replace(/^https?/, "wss").replace(/^http/, "ws");
-    const wsUrl  = `${wsBase}/signalr/connect?clientProtocol=1.5&transport=webSockets&connectionToken=${token}&connectionData=${hub}&f1cookie=${cookie}`;
+        // ── Step 2: Open WebSocket ─────────────────────────────────────────
+        // Connect to the stream, passing the token and cookie via query params
+        // (the Worker will extract and use the cookie when connecting to F1).
+        const wsBase = WORKER_URL.replace(/^https?/, "wss").replace(/^http/, "ws");
+        const wsUrl = `${wsBase}/signalr/connect?clientProtocol=1.5&transport=webSockets&connectionToken=${token}&connectionData=${hub}&f1cookie=${cookie}`;
 
-    const ws = new WebSocket(wsUrl);
-    state.ws = ws;
+        const ws = new WebSocket(wsUrl);
+        state.ws = ws;
 
-    ws.onopen = () => {
-      setStatus("connecting", "Subscribing…");
-      // ── Step 3: Subscribe to topics ─────────────────────────────────
-      ws.send(JSON.stringify({ H: "Streaming", M: "Subscribe", A: [TOPICS], I: 1 }));
-    };
+        ws.onopen = () => {
+          setStatus("connecting", "Subscribing…");
+          // ── Step 3: Subscribe to topics ─────────────────────────────────
+          ws.send(JSON.stringify({ H: "Streaming", M: "Subscribe", A: [TOPICS], I: 1 }));
+        };
 
-    ws.onmessage = (event) => handleMessage(event.data);
+        ws.onmessage = (event) => handleMessage(event.data);
 
-    ws.onerror = (e) => {
-      console.error("WebSocket error", e);
-      setStatus("error", "Connection error");
-    };
+        ws.onerror = (e) => {
+          console.error("WebSocket error", e);
+          setStatus("error", "Connection error");
+        };
 
-    ws.onclose = () => {
+        ws.onclose = () => {
+          state.connected = false;
+          setStatus("", "Disconnected");
+        };
+
+      } catch (e) {
+        console.error("Connection failed:", e);
+        setStatus("error", "Failed: " + e.message);
+      }
+    }
+
+    function disconnect() {
+      state.ws?.close();
       state.connected = false;
       setStatus("", "Disconnected");
-    };
-
-  } catch (e) {
-    console.error("Connection failed:", e);
-    setStatus("error", "Failed: " + e.message);
-  }
-}
-
-function disconnect() {
-  state.ws?.close();
-  state.connected = false;
-  setStatus("", "Disconnected");
-}
-
-let msgCounter = 0;
-
-async function handleMessage(raw) {
-  let data;
-  try { data = JSON.parse(raw); } catch { return; }
-
-  // SignalR keepalive / empty ping
-  if (Object.keys(data).length === 0) return;
-
-  // The first "R" (result) message arrives after subscribing — it contains
-  // the current state for all topics we subscribed to.
-  if (data.R && !state.connected) {
-    state.connected = true;
-    setStatus("connected", "Live");
-
-    const R = data.R;
-    if (R.DriverList)         processDriverList(R.DriverList);
-    if (R["Position.z"])      { const d = await decompress(R["Position.z"]); if (d) processPositions(d); }
-    if (R.TimingData)         processTimingData(R.TimingData);
-    if (R.TimingAppData)      processTimingAppData(R.TimingAppData);
-    if (R.TrackStatus)        processTrackStatus(R.TrackStatus);
-    if (R.RaceControlMessages) processRaceControl(R.RaceControlMessages);
-    if (R.SessionInfo)        processSessionInfo(R.SessionInfo);
-    if (R.LapCount)           processLapCount(R.LapCount);
-  }
-
-  // "M" messages are incremental updates pushed by F1 as things happen.
-  if (data.M && Array.isArray(data.M)) {
-    for (const msg of data.M) {
-      if (msg.H !== "streaming" && msg.H !== "Streaming") continue;
-      if (msg.M !== "feed") continue;
-
-      const [topic, value] = msg.A;
-      await processTopic(topic, value);
     }
-  }
-}
 
-async function processTopic(topic, value) {
-  switch (topic) {
-    case "DriverList":          processDriverList(value);          break;
-    case "TimingData":          processTimingData(value);          break;
-    case "TimingAppData":       processTimingAppData(value);       break;
-    case "TrackStatus":         processTrackStatus(value);         break;
-    case "RaceControlMessages": processRaceControl(value);         break;
-    case "SessionInfo":         processSessionInfo(value);         break;
-    case "LapCount":            processLapCount(value);            break;
-    case "Position.z": {
-      const d = await decompress(value);
-      if (d) processPositions(d);
-      break;
+    let msgCounter = 0;
+
+    async function handleMessage(raw) {
+      let data;
+      try { data = JSON.parse(raw); } catch { return; }
+
+      // SignalR keepalive / empty ping
+      if (Object.keys(data).length === 0) return;
+
+      // The first "R" (result) message arrives after subscribing — it contains
+      // the current state for all topics we subscribed to.
+      if (data.R && !state.connected) {
+        state.connected = true;
+        setStatus("connected", "Live");
+
+        const R = data.R;
+        if (R.DriverList) processDriverList(R.DriverList);
+        if (R["Position.z"]) { const d = await decompress(R["Position.z"]); if (d) processPositions(d); }
+        if (R.TimingData) processTimingData(R.TimingData);
+        if (R.TimingAppData) processTimingAppData(R.TimingAppData);
+        if (R.TrackStatus) processTrackStatus(R.TrackStatus);
+        if (R.RaceControlMessages) processRaceControl(R.RaceControlMessages);
+        if (R.SessionInfo) processSessionInfo(R.SessionInfo);
+        if (R.LapCount) processLapCount(R.LapCount);
+      }
+
+      // "M" messages are incremental updates pushed by F1 as things happen.
+      if (data.M && Array.isArray(data.M)) {
+        for (const msg of data.M) {
+          if (msg.H !== "streaming" && msg.H !== "Streaming") continue;
+          if (msg.M !== "feed") continue;
+
+          const [topic, value] = msg.A;
+          await processTopic(topic, value);
+        }
+      }
     }
-  }
-}
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// START
-// ═══════════════════════════════════════════════════════════════════════════════
-requestAnimationFrame(draw);
-</script>
+    async function processTopic(topic, value) {
+      switch (topic) {
+        case "DriverList": processDriverList(value); break;
+        case "TimingData": processTimingData(value); break;
+        case "TimingAppData": processTimingAppData(value); break;
+        case "TrackStatus": processTrackStatus(value); break;
+        case "RaceControlMessages": processRaceControl(value); break;
+        case "SessionInfo": processSessionInfo(value); break;
+        case "LapCount": processLapCount(value); break;
+        case "Position.z": {
+          const d = await decompress(value);
+          if (d) processPositions(d);
+          break;
+        }
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // START
+    // ═══════════════════════════════════════════════════════════════════════════════
+    requestAnimationFrame(draw);
+  </script>
 </body>
+
 </html>
