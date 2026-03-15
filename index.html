@@ -4,14 +4,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>F1 Live Timing</title>
+  <title>Pitwall — F1 Live Timing</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link
     href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&family=Share+Tech+Mono&display=swap"
     rel="stylesheet" />
 
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
       --f1-red: #e10600;
@@ -24,13 +30,20 @@
       --text-dim: #666;
       --green: #00d2be;
       --yellow: #ffd700;
-      --purple: #9b59b6;
       --font-main: 'Titillium Web', sans-serif;
       --font-mono: 'Share Tech Mono', monospace;
     }
 
-    html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: var(--font-main); }
+    html,
+    body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-main);
+    }
 
+    /* ── Layout ─────────────────────────────────────────────────────── */
     #app {
       display: grid;
       grid-template-columns: 1fr 280px;
@@ -41,70 +54,273 @@
       background: var(--border);
     }
 
+    /* ── Header ─────────────────────────────────────────────────────── */
     #header {
       grid-area: header;
       background: var(--surface);
       display: flex;
       align-items: center;
       padding: 0 16px;
-      gap: 20px;
+      gap: 16px;
     }
 
-    .logo { display: flex; align-items: center; gap: 10px; }
-    .logo-bar { width: 4px; height: 24px; background: var(--f1-red); border-radius: 2px; }
-    .logo-text { font-size: 18px; font-weight: 700; letter-spacing: 0.05em; color: var(--f1-white); }
-    .logo-text span { color: var(--f1-red); }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-    #session-info { display: flex; align-items: center; gap: 16px; margin-left: 8px; }
+    .logo-bar {
+      width: 4px;
+      height: 24px;
+      background: var(--f1-red);
+      border-radius: 2px;
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--f1-white);
+    }
+
+    .logo-text span {
+      color: var(--f1-red);
+    }
+
+    #session-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-left: 4px;
+    }
 
     .session-badge {
-      font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 3px 10px; border-radius: 2px; background: var(--surface2);
-      border: 1px solid var(--border); color: var(--text-dim);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 2px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
     }
-    .session-badge.live { background: rgba(225,6,0,0.15); border-color: var(--f1-red); color: var(--f1-red); }
 
-    #session-name { font-size: 13px; font-weight: 600; color: var(--text); }
-    #lap-counter { font-family: var(--font-mono); font-size: 13px; color: var(--text-dim); }
+    .session-badge.live {
+      background: rgba(225, 6, 0, 0.15);
+      border-color: var(--f1-red);
+      color: var(--f1-red);
+    }
 
+    #session-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    #lap-counter {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    /* ── View Toggle ─────────────────────────────────────────────────── */
+    .view-toggle {
+      display: flex;
+      gap: 1px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .view-btn {
+      background: var(--surface2);
+      color: var(--text-dim);
+      border: none;
+      padding: 5px 14px;
+      font-family: var(--font-main);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .view-btn:hover {
+      background: #222;
+      color: var(--text);
+    }
+
+    .view-btn.active {
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    /* ── Track Status & Status indicators ───────────────────────────── */
     #track-status-badge {
-      margin-left: auto; font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
-      text-transform: uppercase; padding: 4px 14px; border-radius: 2px; transition: all 0.3s;
+      margin-left: auto;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 2px;
+      transition: all 0.3s;
     }
-    .status-green  { background: rgba(0,210,190,0.15); color: var(--green);  border: 1px solid var(--green); }
-    .status-yellow { background: rgba(255,215,0,0.15); color: var(--yellow); border: 1px solid var(--yellow); }
-    .status-red    { background: rgba(225,6,0,0.2);   color: var(--f1-red); border: 1px solid var(--f1-red); }
-    .status-sc     { background: rgba(255,215,0,0.2); color: var(--yellow); border: 1px solid var(--yellow); }
-    .status-vsc    { background: rgba(255,215,0,0.1); color: var(--yellow); border: 1px solid var(--yellow); }
+
+    .status-green {
+      background: rgba(0, 210, 190, 0.15);
+      color: var(--green);
+      border: 1px solid var(--green);
+    }
+
+    .status-yellow {
+      background: rgba(255, 215, 0, 0.15);
+      color: var(--yellow);
+      border: 1px solid var(--yellow);
+    }
+
+    .status-red {
+      background: rgba(225, 6, 0, 0.2);
+      color: var(--f1-red);
+      border: 1px solid var(--f1-red);
+    }
+
+    .status-sc {
+      background: rgba(255, 215, 0, 0.2);
+      color: var(--yellow);
+      border: 1px solid var(--yellow);
+    }
+
+    .status-vsc {
+      background: rgba(255, 215, 0, 0.1);
+      color: var(--yellow);
+      border: 1px solid var(--yellow);
+    }
+
+    #status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #444;
+      transition: background 0.3s;
+      flex-shrink: 0;
+    }
+
+    #status-dot.connecting {
+      background: var(--yellow);
+      animation: pulse 1s infinite;
+    }
+
+    #status-dot.connected {
+      background: var(--green);
+    }
+
+    #status-dot.error {
+      background: var(--f1-red);
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
+    }
+
+    #status-text {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
 
     #connect-btn {
-      background: var(--f1-red); color: white; border: none; padding: 6px 18px;
-      font-family: var(--font-main); font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
-      text-transform: uppercase; cursor: pointer; border-radius: 2px; transition: background 0.2s; margin-left: auto;
+      background: var(--f1-red);
+      color: white;
+      border: none;
+      padding: 6px 18px;
+      font-family: var(--font-main);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.2s;
+      margin-left: auto;
     }
-    #connect-btn:hover { background: #c00400; }
-    #connect-btn:disabled { background: #3a3a3a; color: #666; cursor: not-allowed; }
-    #connect-btn.connected { background: #1a3a1a; color: var(--green); border: 1px solid var(--green); }
 
-    #map-area { grid-area: map; background: var(--bg); position: relative; overflow: hidden; }
-    #track-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-
-    #no-session {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%); text-align: center; pointer-events: none;
+    #connect-btn:hover {
+      background: #c00400;
     }
-    #no-session h2 { font-size: 22px; font-weight: 700; color: var(--text-dim); margin-bottom: 8px; }
-    #no-session p  { font-size: 13px; color: #444; max-width: 280px; }
 
-    #timing-tower { grid-area: timing; background: var(--surface); overflow-y: auto; scrollbar-width: none; }
-    #timing-tower::-webkit-scrollbar { display: none; }
+    #connect-btn:disabled {
+      background: #3a3a3a;
+      color: #666;
+      cursor: not-allowed;
+    }
+
+    #connect-btn.connected {
+      background: #1a3a1a;
+      color: var(--green);
+      border: 1px solid var(--green);
+    }
+
+    /* ── Map Area ────────────────────────────────────────────────────── */
+    #map-area {
+      grid-area: map;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #track-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── Timing Tower ────────────────────────────────────────────────── */
+    #timing-tower {
+      grid-area: timing;
+      background: var(--surface);
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+
+    #timing-tower::-webkit-scrollbar {
+      display: none;
+    }
 
     .panel-header {
-      padding: 8px 12px; font-size: 9px; font-weight: 700; letter-spacing: 0.15em;
-      text-transform: uppercase; color: var(--text-dim); border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; gap: 6px;
+      padding: 8px 12px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .panel-header::before { content: ''; display: block; width: 3px; height: 10px; background: var(--f1-red); border-radius: 1px; }
+
+    .panel-header::before {
+      content: '';
+      display: block;
+      width: 3px;
+      height: 10px;
+      background: var(--f1-red);
+      border-radius: 1px;
+    }
 
     .timing-row {
       display: grid;
@@ -112,484 +328,1073 @@
       gap: 4px;
       align-items: center;
       padding: 5px 10px;
-      border-bottom: 1px solid rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
       font-size: 11px;
       transition: background 0.15s;
     }
-    .timing-row:hover { background: var(--surface2); }
 
-    .t-pos  { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); text-align: right; }
-    .t-num  { font-family: var(--font-mono); font-size: 10px; text-align: center; padding: 1px 4px; border-radius: 2px; font-weight: 700; }
-    .t-name { font-size: 11px; font-weight: 600; letter-spacing: 0.03em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .timing-row:hover {
+      background: var(--surface2);
+    }
+
+    .t-pos {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-dim);
+      text-align: right;
+    }
+
+    .t-num {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-align: center;
+      padding: 1px 4px;
+      border-radius: 2px;
+      font-weight: 700;
+    }
+
+    .t-name {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
 
     .t-laptime {
-      font-family: var(--font-mono); font-size: 10px;
-      color: var(--green); text-align: right; min-width: 55px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--green);
+      text-align: right;
+      min-width: 55px;
     }
+
     .t-gap {
-      font-family: var(--font-mono); font-size: 10px;
-      color: var(--text-dim); text-align: right; min-width: 45px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-dim);
+      text-align: right;
+      min-width: 45px;
     }
 
-    .t-tyre { font-size: 9px; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-    .tyre-S { background: rgba(225,6,0,0.25);   color: #ff4444; border: 1px solid #ff4444; }
-    .tyre-M { background: rgba(255,215,0,0.2);  color: #ffd700; border: 1px solid #ffd700; }
-    .tyre-H { background: rgba(255,255,255,0.1);color: #ccc;    border: 1px solid #666; }
-    .tyre-I { background: rgba(0,100,255,0.2);  color: #4488ff; border: 1px solid #4488ff; }
-    .tyre-W { background: rgba(0,200,255,0.2);  color: #00c8ff; border: 1px solid #00c8ff; }
-    .tyre-- { background: rgba(100,100,100,0.2);color: #888;    border: 1px solid #555; }
+    .t-tyre {
+      font-size: 9px;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-    #race-control { grid-area: rc; background: var(--surface); display: flex; flex-direction: column; overflow: hidden; }
-    #rc-messages  { overflow-y: auto; flex: 1; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+    .tyre-S {
+      background: rgba(225, 6, 0, 0.25);
+      color: #ff4444;
+      border: 1px solid #ff4444;
+    }
 
-    .rc-msg { padding: 5px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 10px; line-height: 1.4; display: flex; gap: 8px; align-items: flex-start; animation: rcSlideIn 0.3s ease; }
-    @keyframes rcSlideIn { from { opacity:0; transform:translateX(-6px); } to { opacity:1; transform:translateX(0); } }
-    .rc-time { font-family: var(--font-mono); font-size: 9px; color: var(--text-dim); white-space: nowrap; padding-top: 1px; }
-    .rc-text { color: var(--text); }
-    .rc-flag-YELLOW .rc-text { color: var(--yellow); }
-    .rc-flag-RED    .rc-text { color: var(--f1-red); }
-    .rc-flag-GREEN  .rc-text { color: var(--green); }
-    .rc-flag-SC     .rc-text { color: var(--yellow); }
-    .rc-flag-VSC    .rc-text { color: var(--yellow); }
+    .tyre-M {
+      background: rgba(255, 215, 0, 0.2);
+      color: #ffd700;
+      border: 1px solid #ffd700;
+    }
 
-    #status-dot { width: 8px; height: 8px; border-radius: 50%; background: #444; transition: background 0.3s; flex-shrink: 0; }
-    #status-dot.connecting { background: var(--yellow); animation: pulse 1s infinite; }
-    #status-dot.connected  { background: var(--green); }
-    #status-dot.error      { background: var(--f1-red); }
-    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
-    #status-text { font-size: 11px; color: var(--text-dim); }
+    .tyre-H {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ccc;
+      border: 1px solid #666;
+    }
+
+    .tyre-I {
+      background: rgba(0, 100, 255, 0.2);
+      color: #4488ff;
+      border: 1px solid #4488ff;
+    }
+
+    .tyre-W {
+      background: rgba(0, 200, 255, 0.2);
+      color: #00c8ff;
+      border: 1px solid #00c8ff;
+    }
+
+    .tyre-- {
+      background: rgba(100, 100, 100, 0.2);
+      color: #888;
+      border: 1px solid #555;
+    }
+
+    /* ── Race Control ────────────────────────────────────────────────── */
+    #race-control {
+      grid-area: rc;
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    #rc-messages {
+      overflow-y: auto;
+      flex: 1;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .rc-msg {
+      padding: 5px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      font-size: 10px;
+      line-height: 1.4;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      animation: rcSlideIn 0.3s ease;
+    }
+
+    @keyframes rcSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .rc-time {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-dim);
+      white-space: nowrap;
+      padding-top: 1px;
+    }
+
+    .rc-text {
+      color: var(--text);
+    }
+
+    .rc-flag-YELLOW .rc-text {
+      color: var(--yellow);
+    }
+
+    .rc-flag-RED .rc-text {
+      color: var(--f1-red);
+    }
+
+    .rc-flag-GREEN .rc-text {
+      color: var(--green);
+    }
+
+    .rc-flag-SC .rc-text {
+      color: var(--yellow);
+    }
+
+    .rc-flag-VSC .rc-text {
+      color: var(--yellow);
+    }
   </style>
 </head>
+
 <body>
-<div id="app">
+  <div id="app">
 
-  <header id="header">
-    <div class="logo">
-      <div class="logo-bar"></div>
-      <div class="logo-text">F1 <span>LIVE</span></div>
-    </div>
-    <div id="session-info">
-      <div id="live-badge" class="session-badge">Offline</div>
-      <div id="session-name">—</div>
-      <div id="lap-counter"></div>
-    </div>
-    <div id="track-status-badge" class="status-green">All Clear</div>
-    <div id="status-dot"></div>
-    <div id="status-text">Not connected</div>
-    <button id="connect-btn" onclick="connectToF1()">Connect</button>
-  </header>
+    <!-- ── Header ───────────────────────────────────────────────────── -->
+    <header id="header">
+      <div class="logo">
+        <div class="logo-bar"></div>
+        <div class="logo-text">F1 <span>LIVE</span></div>
+      </div>
 
-  <main id="map-area">
-    <canvas id="track-canvas"></canvas>
-    <div id="no-session">
-      <h2>No Live Session</h2>
-      <p>Click Connect to watch for an active F1 session. Data streams during practice, qualifying, and races.</p>
-    </div>
-  </main>
+      <div id="session-info">
+        <div id="live-badge" class="session-badge">Offline</div>
+        <div id="session-name">—</div>
+        <div id="lap-counter"></div>
+      </div>
 
-  <aside id="timing-tower">
-    <div class="panel-header">Timing Tower</div>
-    <div id="timing-rows"></div>
-  </aside>
+      <!-- View toggle — inserted between session info and track status -->
+      <div class="view-toggle">
+        <button class="view-btn active" id="btn-track" onclick="switchView('track')">Track Map</button>
+        <button class="view-btn" id="btn-linear" onclick="switchView('linear')">Race Order</button>
+      </div>
 
-  <section id="race-control">
-    <div class="panel-header">Race Control</div>
-    <div id="rc-messages"></div>
-  </section>
+      <div id="track-status-badge" class="status-green">All Clear</div>
 
-</div>
+      <div id="status-dot"></div>
+      <div id="status-text">Not connected</div>
 
-<script>
-  // ── Configuration ────────────────────────────────────────────────────────────
-  const WORKER_URL = "https://itwall.pitwall-f1.workers.dev";
+      <button id="connect-btn" onclick="connectToF1()">Connect</button>
+    </header>
 
-  // ── State ────────────────────────────────────────────────────────────────────
-  const state = {
-    drivers:        {},
-    positions:      {},
-    timing:         {},
-    stints:         {},
-    positionBounds: { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity },
-    trackPoints:    [],
-    connected:      false,
-    ws:             null,
-  };
+    <!-- ── Map / Visualisation canvas ──────────────────────────────── -->
+    <main id="map-area">
+      <canvas id="track-canvas"></canvas>
+    </main>
 
-  // ── Canvas ───────────────────────────────────────────────────────────────────
-  const canvas = document.getElementById("track-canvas");
-  const ctx    = canvas.getContext("2d");
+    <!-- ── Timing Tower ─────────────────────────────────────────────── -->
+    <aside id="timing-tower">
+      <div class="panel-header">Timing Tower</div>
+      <div id="timing-rows"></div>
+    </aside>
 
-  function resizeCanvas() {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    canvas.width  = rect.width;
-    canvas.height = rect.height;
-  }
-  resizeCanvas();
-  window.addEventListener("resize", resizeCanvas);
+    <!-- ── Race Control ─────────────────────────────────────────────── -->
+    <section id="race-control">
+      <div class="panel-header">Race Control</div>
+      <div id="rc-messages"></div>
+    </section>
 
-  // ── Coordinate Helpers ───────────────────────────────────────────────────────
-  function toCanvas(x, y) {
-    const b = state.positionBounds;
-    const padding = 60;
-    const w = canvas.width  - padding * 2;
-    const h = canvas.height - padding * 2;
-    const rangeX = b.maxX - b.minX || 1;
-    const rangeY = b.maxY - b.minY || 1;
-    const scale  = Math.min(w / rangeX, h / rangeY);
-    const cx = padding + (x - b.minX) * scale + (w - rangeX * scale) / 2;
-    const cy = padding + (y - b.minY) * scale + (h - rangeY * scale) / 2;
-    return { cx, cy };
-  }
+  </div>
 
-  function updateBounds(x, y) {
-    const b = state.positionBounds;
-    b.minX = Math.min(b.minX, x); b.maxX = Math.max(b.maxX, x);
-    b.minY = Math.min(b.minY, y); b.maxY = Math.max(b.maxY, y);
-  }
+  <script>
+    // ════════════════════════════════════════════════════════════════════
+    // CONFIGURATION
+    // ════════════════════════════════════════════════════════════════════
 
-  // ── Drawing ──────────────────────────────────────────────────────────────────
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const hasData = Object.keys(state.positions).length > 0;
-    document.getElementById("no-session").style.display = hasData ? "none" : "block";
-    if (!hasData) return;
-    drawTrackOutline();
-    const driversByPos = Object.values(state.drivers).sort((a, b) => {
-      const pa = state.timing[a.driverNumber]?.position || 99;
-      const pb = state.timing[b.driverNumber]?.position || 99;
-      return pa - pb;
-    });
-    for (const driver of driversByPos) {
-      const pos = state.positions[driver.driverNumber];
-      if (!pos || pos.status === "OffTrack") continue;
-      drawCar(driver, pos);
+    const WORKER_URL = "https://itwall.pitwall-f1.workers.dev";
+
+    // ════════════════════════════════════════════════════════════════════
+    // STATE
+    // ════════════════════════════════════════════════════════════════════
+
+    const state = {
+      drivers: {},   // { num: { driverNumber, nameAcronym, teamColour, ... } }
+      positions: {},   // { num: { x, y, status } }
+      timing: {},   // { num: { position, gap, lapTime, bestTime, inPit, pitOut } }
+      stints: {},   // { num: { compound, laps } }
+      positionBounds: { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity },
+      trackPoints: [],   // [x,y] pairs for drawing the track outline
+      connected: false,
+      ws: null,
+      openF1Attempted: false, // prevent multiple fetches
+    };
+
+    // ════════════════════════════════════════════════════════════════════
+    // VIEW
+    // ════════════════════════════════════════════════════════════════════
+
+    let currentView = 'track'; // 'track' | 'linear'
+
+    function switchView(view) {
+      currentView = view;
+      document.getElementById('btn-track').classList.toggle('active', view === 'track');
+      document.getElementById('btn-linear').classList.toggle('active', view === 'linear');
     }
-    requestAnimationFrame(draw);
-  }
 
-  function drawTrackOutline() {
-    if (state.trackPoints.length < 20) return;
-    ctx.save();
-    ctx.globalAlpha = 0.08;
-    ctx.fillStyle = "#ffffff";
-    for (const [x, y] of state.trackPoints) {
-      const { cx, cy } = toCanvas(x, y);
+    // ════════════════════════════════════════════════════════════════════
+    // CANVAS
+    // ════════════════════════════════════════════════════════════════════
+
+    const canvas = document.getElementById('track-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // ════════════════════════════════════════════════════════════════════
+    // COORDINATE HELPERS  (used by Track Map view)
+    // ════════════════════════════════════════════════════════════════════
+
+    function toCanvas(x, y) {
+      const b = state.positionBounds;
+      const pad = 60;
+      const w = canvas.width - pad * 2;
+      const h = canvas.height - pad * 2;
+      const rangeX = b.maxX - b.minX || 1;
+      const rangeY = b.maxY - b.minY || 1;
+      const scale = Math.min(w / rangeX, h / rangeY);
+      const cx = pad + (x - b.minX) * scale + (w - rangeX * scale) / 2;
+      const cy = pad + (y - b.minY) * scale + (h - rangeY * scale) / 2;
+      return { cx, cy };
+    }
+
+    function updateBounds(x, y) {
+      const b = state.positionBounds;
+      if (x < b.minX) b.minX = x; if (x > b.maxX) b.maxX = x;
+      if (y < b.minY) b.minY = y; if (y > b.maxY) b.maxY = y;
+    }
+
+    // ════════════════════════════════════════════════════════════════════
+    // MAIN DRAW LOOP
+    // ════════════════════════════════════════════════════════════════════
+
+    function draw() {
+      requestAnimationFrame(draw); // always keep the loop alive
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (currentView === 'track') {
+        drawTrackMap();
+      } else {
+        drawLinearMap();
+      }
+    }
+
+    // ════════════════════════════════════════════════════════════════════
+    // VIEW 1 — TRACK MAP
+    // Shows car dots on a 2D track outline.
+    // Position data comes from SignalR Position.z OR OpenF1 REST (hybrid).
+    // ════════════════════════════════════════════════════════════════════
+
+    function drawTrackMap() {
+      const hasPositions = Object.keys(state.positions).length > 0;
+      const hasOutline = state.trackPoints.length > 20;
+
+      if (!hasPositions) {
+        // ── Nothing to show ──────────────────────────────────────────
+        ctx.textAlign = 'center';
+        if (!state.connected) {
+          ctx.fillStyle = '#2a2a2a';
+          ctx.font = 'bold 20px Titillium Web';
+          ctx.fillText('No Live Session', canvas.width / 2, canvas.height / 2 - 10);
+          ctx.font = '13px Titillium Web';
+          ctx.fillStyle = '#333';
+          ctx.fillText('Click Connect to watch for an active F1 session', canvas.width / 2, canvas.height / 2 + 18);
+        } else {
+          ctx.fillStyle = '#2a2a2a';
+          ctx.font = 'bold 16px Titillium Web';
+          ctx.fillText('Position data unavailable for this session', canvas.width / 2, canvas.height / 2 - 10);
+          ctx.font = '12px Titillium Web';
+          ctx.fillStyle = '#333';
+          ctx.fillText('Switch to Race Order view for live timing →', canvas.width / 2, canvas.height / 2 + 18);
+        }
+        ctx.textAlign = 'left';
+        return;
+      }
+
+      // ── Draw track outline ────────────────────────────────────────
+      if (hasOutline) {
+        ctx.save();
+        ctx.globalAlpha = 0.10;
+        ctx.fillStyle = '#ffffff';
+        for (const [x, y] of state.trackPoints) {
+          const { cx, cy } = toCanvas(x, y);
+          ctx.beginPath();
+          ctx.arc(cx, cy, 1.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      // ── Draw cars ─────────────────────────────────────────────────
+      const sorted = Object.values(state.drivers).sort((a, b) => {
+        const pa = state.timing[a.driverNumber]?.position || 99;
+        const pb = state.timing[b.driverNumber]?.position || 99;
+        return pa - pb;
+      });
+
+      for (const driver of sorted) {
+        const pos = state.positions[driver.driverNumber];
+        if (!pos || pos.status === 'OffTrack') continue;
+        drawCarDot(driver, pos);
+      }
+    }
+
+    function drawCarDot(driver, pos) {
+      const { cx, cy } = toCanvas(pos.x, pos.y);
+      const color = '#' + (driver.teamColour || '888888');
+      const tPos = state.timing[driver.driverNumber]?.position || '?';
+      const tla = driver.nameAcronym || driver.driverNumber;
+      const labelX = cx + 10;
+      const labelY = cy - 8;
+
+      // Glow
+      const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, 14);
+      grd.addColorStop(0, color + '55');
+      grd.addColorStop(1, 'transparent');
+      ctx.fillStyle = grd;
+      ctx.beginPath(); ctx.arc(cx, cy, 14, 0, Math.PI * 2); ctx.fill();
+
+      // Dot
+      ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+      ctx.fillStyle = color; ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.lineWidth = 1; ctx.stroke();
+
+      // Label background
+      ctx.font = 'bold 9px Titillium Web';
+      const tw = ctx.measureText(tla).width;
+      ctx.fillStyle = 'rgba(0,0,0,0.75)';
+      ctx.fillRect(labelX - 2, labelY - 9, tw + 10, 12);
+
+      // Position (small, coloured)
+      ctx.font = '7px Share Tech Mono'; ctx.fillStyle = color;
+      ctx.fillText(tPos, labelX, labelY);
+
+      // TLA
+      ctx.font = 'bold 9px Titillium Web'; ctx.fillStyle = '#ffffff';
+      ctx.fillText(tla, labelX + 9, labelY);
+    }
+
+    // ════════════════════════════════════════════════════════════════════
+    // VIEW 2 — RACE ORDER (Linear Map)
+    // A horizontal "virtual straight" showing the field spread by gap.
+    // Works entirely from TimingData — always available.
+    // ════════════════════════════════════════════════════════════════════
+
+    function drawLinearMap() {
+      const W = canvas.width;
+      const H = canvas.height;
+
+      const sorted = Object.values(state.drivers)
+        .filter(d => state.timing[d.driverNumber]?.position)
+        .sort((a, b) => {
+          const pa = state.timing[a.driverNumber]?.position || 99;
+          const pb = state.timing[b.driverNumber]?.position || 99;
+          return pa - pb;
+        });
+
+      // ── No data yet ──────────────────────────────────────────────
+      if (sorted.length === 0) {
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#2a2a2a';
+        ctx.font = 'bold 20px Titillium Web';
+        ctx.fillText('No Session Data', W / 2, H / 2 - 10);
+        ctx.font = '13px Titillium Web';
+        ctx.fillStyle = '#333';
+        ctx.fillText(state.connected ? 'Waiting for timing data…' : 'Click Connect to start', W / 2, H / 2 + 18);
+        ctx.textAlign = 'left';
+        return;
+      }
+
+      // ── Parse gap string to seconds ───────────────────────────────
+      function parseGap(gapStr) {
+        if (!gapStr) return { secs: 0, lapped: false };
+        const clean = gapStr.replace('+', '').trim();
+        if (/\dL$/i.test(clean)) return { secs: null, lapped: true, laps: parseInt(clean) };
+        const secs = parseFloat(clean);
+        return { secs: isNaN(secs) ? 0 : secs, lapped: false };
+      }
+
+      // ── Separate drivers into zones ───────────────────────────────
+      const onTrack = sorted.filter(d => !state.timing[d.driverNumber]?.inPit && !state.timing[d.driverNumber]?.pitOut);
+      const pitOut = sorted.filter(d => state.timing[d.driverNumber]?.pitOut);
+      const inPit = sorted.filter(d => state.timing[d.driverNumber]?.inPit);
+      const lapped = onTrack.filter(d => parseGap(state.timing[d.driverNumber]?.gap).lapped);
+      const leadLap = onTrack.filter(d => !parseGap(state.timing[d.driverNumber]?.gap).lapped);
+
+      // ── Layout constants ──────────────────────────────────────────
+      const padL = 56;
+      const padR = 56;
+      const trackW = W - padL - padR;
+      const trackY = H * 0.34;
+
+      // Scale based on max gap among lead-lap cars
+      const maxGap = Math.max(
+        ...leadLap.map(d => parseGap(state.timing[d.driverNumber]?.gap).secs || 0),
+        1
+      );
+
+      // ── Track line ────────────────────────────────────────────────
+      const lineGrad = ctx.createLinearGradient(padL, 0, padL + trackW, 0);
+      lineGrad.addColorStop(0, 'rgba(255,255,255,0.18)');
+      lineGrad.addColorStop(0.6, 'rgba(255,255,255,0.06)');
+      lineGrad.addColorStop(1, 'rgba(255,255,255,0.01)');
+      ctx.strokeStyle = lineGrad;
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(padL, trackY); ctx.lineTo(padL + trackW, trackY); ctx.stroke();
+
+      // Section label
+      ctx.font = '9px Share Tech Mono'; ctx.fillStyle = '#2a2a2a'; ctx.textAlign = 'left';
+      ctx.fillText('ON TRACK', padL, trackY - 26);
+
+      // Tick marks every 10s
+      ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.lineWidth = 1;
+      for (let t = 10; t < maxGap; t += 10) {
+        const tx = padL + (t / maxGap) * trackW * 0.88;
+        ctx.beginPath(); ctx.moveTo(tx, trackY - 6); ctx.lineTo(tx, trackY + 6); ctx.stroke();
+        ctx.font = '8px Share Tech Mono'; ctx.fillStyle = '#1e1e1e'; ctx.textAlign = 'center';
+        ctx.fillText(`${t}s`, tx, trackY + 18);
+      }
+
+      // ── Draw lead-lap cars ────────────────────────────────────────
+      leadLap.forEach((driver, i) => {
+        const t = state.timing[driver.driverNumber] || {};
+        const color = '#' + (driver.teamColour || '888888');
+        const gap = parseGap(t.gap);
+        const pos = t.position;
+        const isP1 = pos === 1;
+
+        const xFrac = isP1 ? 0.06 : 0.06 + (gap.secs / maxGap) * 0.82;
+        const x = padL + xFrac * trackW;
+
+        // Alternate labels above/below — leader always above to avoid overlap
+        const above = isP1 ? true : i % 2 === 0;
+        const labelOff = above ? -32 : 28;
+        const tickEnd = above ? -12 : 12;
+
+        // Tick from dot to label
+        ctx.strokeStyle = color + '33'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(x, trackY); ctx.lineTo(x, trackY + tickEnd); ctx.stroke();
+
+        // Glow
+        const r = isP1 ? 10 : 8;
+        const grd = ctx.createRadialGradient(x, trackY, 0, x, trackY, r + 8);
+        grd.addColorStop(0, color + '44'); grd.addColorStop(1, 'transparent');
+        ctx.fillStyle = grd;
+        ctx.beginPath(); ctx.arc(x, trackY, r + 8, 0, Math.PI * 2); ctx.fill();
+
+        // Dot
+        ctx.beginPath(); ctx.arc(x, trackY, r, 0, Math.PI * 2);
+        ctx.fillStyle = color; ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1.5; ctx.stroke();
+
+        // Position number inside dot — always position, never car number
+        ctx.fillStyle = 'rgba(0,0,0,0.85)';
+        ctx.font = `bold ${isP1 ? 9 : 8}px Share Tech Mono`;
+        ctx.textAlign = 'center';
+        ctx.fillText(pos, x, trackY + 3.5);
+
+        // TLA — positioned clear of the dot with consistent offset
+        const tlaY = above
+          ? trackY - r - 10        // above: clear of top of dot
+          : trackY + r + 18;       // below: clear of bottom of dot
+        ctx.font = `bold ${isP1 ? 11 : 10}px Titillium Web`;
+        ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.fillText(driver.nameAcronym || '', x, tlaY);
+
+        // Gap label
+        if (!isP1 && gap.secs > 0) {
+          const gapY = above ? tlaY - 11 : tlaY + 12;
+          ctx.font = '8px Share Tech Mono';
+          ctx.fillStyle = '#3a3a3a';
+          ctx.textAlign = 'center';
+          ctx.fillText('+' + gap.secs.toFixed(1) + 's', x, gapY);
+        }
+
+        ctx.textAlign = 'left';
+      });
+
+      // ── Draw lapped cars — far right of track line ────────────────
+      if (lapped.length > 0) {
+        const lxBase = padL + trackW * 0.90;
+        ctx.font = '8px Share Tech Mono';
+        ctx.fillStyle = '#252525';
+        ctx.textAlign = 'left';
+        ctx.fillText('LAPPED', lxBase, trackY - 26);
+
+        ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.lineWidth = 1;
+        ctx.setLineDash([3, 4]);
+        ctx.beginPath(); ctx.moveTo(lxBase - 10, trackY - 18); ctx.lineTo(lxBase - 10, trackY + 18); ctx.stroke();
+        ctx.setLineDash([]);
+
+        lapped.forEach((driver, i) => {
+          const t = state.timing[driver.driverNumber] || {};
+          const color = '#' + (driver.teamColour || '888888');
+          const gap = parseGap(t.gap);
+          const x = lxBase + i * 24;
+
+          const grd = ctx.createRadialGradient(x, trackY, 0, x, trackY, 10);
+          grd.addColorStop(0, color + '22'); grd.addColorStop(1, 'transparent');
+          ctx.fillStyle = grd;
+          ctx.beginPath(); ctx.arc(x, trackY, 10, 0, Math.PI * 2); ctx.fill();
+
+          ctx.beginPath(); ctx.arc(x, trackY, 6, 0, Math.PI * 2);
+          ctx.fillStyle = color + '55'; ctx.fill();
+
+          ctx.fillStyle = 'rgba(0,0,0,0.7)'; ctx.font = 'bold 7px Share Tech Mono'; ctx.textAlign = 'center';
+          ctx.fillText(t.position || '', x, trackY + 2.5);
+
+          ctx.font = '9px Titillium Web'; ctx.fillStyle = color + '88';
+          ctx.fillText(driver.nameAcronym || '', x, trackY - 14);
+
+          ctx.font = '7px Share Tech Mono'; ctx.fillStyle = '#2a2a2a';
+          ctx.fillText((gap.laps || 1) + 'L', x, trackY + 18);
+
+          ctx.textAlign = 'left';
+        });
+      }
+
+      // ── Bottom zone: OUT LAP + IN PIT — centered, compact ─────────
+      const bottomDrivers = [...pitOut, ...inPit];
+      if (bottomDrivers.length === 0) return;
+
+      const dotR = 7;
+      const dotSpacing = 52;
+      const zoneY = H * 0.74;
+
+      // Split into two sub-groups for labelling
+      const groups = [];
+      if (pitOut.length > 0) groups.push({ label: 'OUT LAP', color: '#ffd700', drivers: pitOut });
+      if (inPit.length > 0) groups.push({ label: 'IN PIT', color: '#444', drivers: inPit });
+
+      // Calculate total width needed to center everything
+      const totalDots = bottomDrivers.length + (groups.length > 1 ? 1 : 0); // +1 gap between groups
+      const groupGap = 30; // extra px between OUT LAP and IN PIT groups
+      const totalW = pitOut.length * dotSpacing
+        + inPit.length * dotSpacing
+        + (groups.length > 1 ? groupGap : 0)
+        - dotSpacing; // subtract one since spacing is between dots
+      const startX = (W - totalW) / 2;
+
+      // Section header
+      ctx.font = '9px Share Tech Mono'; ctx.textAlign = 'center'; ctx.fillStyle = '#2a2a2a';
+      ctx.fillText('BOTTOM OF FIELD', W / 2, zoneY - 30);
+
+      // Dashed baseline
+      ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 1;
+      ctx.setLineDash([4, 5]);
       ctx.beginPath();
-      ctx.arc(cx, cy, 1.5, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.moveTo(startX - 20, zoneY);
+      ctx.lineTo(startX + totalW + 20, zoneY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      let xCursor = startX;
+
+      groups.forEach((group, gi) => {
+        // Group label above the first dot of the group
+        ctx.font = '8px Share Tech Mono';
+        ctx.fillStyle = group.color;
+        ctx.textAlign = 'center';
+        const groupCentreX = xCursor + ((group.drivers.length - 1) * dotSpacing) / 2;
+        ctx.fillText(group.label, groupCentreX, zoneY - 14);
+
+        group.drivers.forEach((driver, i) => {
+          const t = state.timing[driver.driverNumber] || {};
+          const color = '#' + (driver.teamColour || '888888');
+          const x = xCursor;
+
+          // Glow
+          const grd = ctx.createRadialGradient(x, zoneY, 0, x, zoneY, dotR + 6);
+          grd.addColorStop(0, color + '33'); grd.addColorStop(1, 'transparent');
+          ctx.fillStyle = grd;
+          ctx.beginPath(); ctx.arc(x, zoneY, dotR + 6, 0, Math.PI * 2); ctx.fill();
+
+          // Dot — OUT LAP gets gold outline
+          ctx.beginPath(); ctx.arc(x, zoneY, dotR, 0, Math.PI * 2);
+          ctx.fillStyle = color; ctx.fill();
+
+          if (group.label === 'OUT LAP') {
+            ctx.strokeStyle = '#ffd700'; ctx.lineWidth = 1.5;
+            ctx.beginPath(); ctx.arc(x, zoneY, dotR + 2, 0, Math.PI * 2); ctx.stroke();
+          } else {
+            ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.arc(x, zoneY, dotR, 0, Math.PI * 2); ctx.stroke();
+          }
+
+          // Position inside dot
+          ctx.fillStyle = 'rgba(0,0,0,0.85)';
+          ctx.font = 'bold 7px Share Tech Mono';
+          ctx.textAlign = 'center';
+          ctx.fillText(t.position || '', x, zoneY + 2.5);
+
+          // TLA above dot
+          ctx.font = 'bold 9px Titillium Web';
+          ctx.fillStyle = color;
+          ctx.textAlign = 'center';
+          ctx.fillText(driver.nameAcronym || '', x, zoneY - dotR - 6);
+
+          xCursor += dotSpacing;
+        });
+
+        // Extra gap between groups
+        if (gi < groups.length - 1) xCursor += groupGap;
+      });
+
+      ctx.textAlign = 'left';
     }
-    ctx.restore();
-  }
+    // ════════════════════════════════════════════════════════════════════
+    // HYBRID — OpenF1 REST track outline
+    // Called once on connect. Tries to fetch car 1's location data from
+    // the latest session to build a track outline. This is free for
+    // sessions > 30 min old; returns empty for live sessions (graceful).
+    // ════════════════════════════════════════════════════════════════════
 
-  function drawCar(driver, pos) {
-    const { cx, cy } = toCanvas(pos.x, pos.y);
-    const color = "#" + (driver.teamColour || "888888");
-    const tPos  = state.timing[driver.driverNumber]?.position || "?";
+    async function fetchOpenF1TrackOutline() {
+      if (state.openF1Attempted) return;
+      state.openF1Attempted = true;
 
-    const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, 14);
-    grd.addColorStop(0, color + "55");
-    grd.addColorStop(1, "transparent");
-    ctx.fillStyle = grd;
-    ctx.beginPath(); ctx.arc(cx, cy, 14, 0, Math.PI * 2); ctx.fill();
+      try {
+        const res = await fetch('https://api.openf1.org/v1/location?session_key=latest&driver_number=1');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
 
-    ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2);
-    ctx.fillStyle = color; ctx.fill();
+        if (!Array.isArray(data) || data.length === 0) return; // live session — no data yet
 
-    ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(255,255,255,0.6)"; ctx.lineWidth = 1; ctx.stroke();
+        // Sample every 8th point to keep things lightweight
+        let loaded = 0;
+        for (let i = 0; i < data.length; i += 8) {
+          const pt = data[i];
+          if (pt.x != null && pt.y != null) {
+            updateBounds(pt.x, pt.y);
+            state.trackPoints.push([pt.x, pt.y]);
+            loaded++;
+          }
+        }
 
-    const tla    = driver.nameAcronym || driver.driverNumber;
-    const labelX = cx + 10;
-    const labelY = cy - 8;
-
-    ctx.font = "bold 9px 'Titillium Web', sans-serif";
-    const textWidth = ctx.measureText(tla).width;
-    ctx.fillStyle = "rgba(0,0,0,0.75)";
-    ctx.fillRect(labelX - 2, labelY - 9, textWidth + 10, 12);
-
-    ctx.font = "7px 'Share Tech Mono', monospace";
-    ctx.fillStyle = color;
-    ctx.fillText(tPos, labelX, labelY);
-
-    ctx.font = "bold 9px 'Titillium Web', sans-serif";
-    ctx.fillStyle = "#ffffff";
-    ctx.fillText(tla, labelX + 9, labelY);
-  }
-
-  // ── Decompression ────────────────────────────────────────────────────────────
-  async function decompress(b64) {
-    try {
-      const binary = atob(b64);
-      const bytes  = new Uint8Array(binary.length);
-      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-      const ds     = new DecompressionStream("deflate-raw");
-      const writer = ds.writable.getWriter();
-      const reader = ds.readable.getReader();
-      writer.write(bytes); writer.close();
-      const chunks = [];
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks.push(value);
+        if (loaded > 0) {
+          console.log(`Pitwall: OpenF1 track outline loaded (${loaded} points)`);
+        }
+      } catch (e) {
+        // Silent — track outline is a nice-to-have, not critical
       }
-      const total = new Uint8Array(chunks.reduce((a, c) => a + c.length, 0));
-      let offset = 0;
-      for (const chunk of chunks) { total.set(chunk, offset); offset += chunk.length; }
-      return JSON.parse(new TextDecoder().decode(total));
-    } catch (e) {
-      console.warn("Decompress failed:", e.message);
-      return null;
     }
-  }
 
-  // ── Data Processing ──────────────────────────────────────────────────────────
-  function processPositions(data) {
-    const entries = data?.Position?.[0]?.Entries ?? data?.Entries ?? data;
-    if (!entries || typeof entries !== "object") return;
-    for (const [num, entry] of Object.entries(entries)) {
-      if (entry.X == null || entry.Y == null) continue;
-      const x = entry.X, y = entry.Y;
-      updateBounds(x, y);
-      state.positions[num] = { x, y, status: entry.Status || "OnTrack" };
-      if (Math.random() < 0.1) {
-        state.trackPoints.push([x, y]);
-        if (state.trackPoints.length > 50000) state.trackPoints.splice(0, 5000);
+    // ════════════════════════════════════════════════════════════════════
+    // DATA DECOMPRESSION
+    // Position.z arrives as base64-encoded deflate-compressed JSON.
+    // DecompressionStream is natively supported in all modern browsers.
+    // ════════════════════════════════════════════════════════════════════
+
+    async function decompress(b64) {
+      try {
+        const binary = atob(b64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+
+        const ds = new DecompressionStream('deflate-raw');
+        const writer = ds.writable.getWriter();
+        const reader = ds.readable.getReader();
+        writer.write(bytes); writer.close();
+
+        const chunks = [];
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(value);
+        }
+
+        const total = new Uint8Array(chunks.reduce((a, c) => a + c.length, 0));
+        let off = 0;
+        for (const c of chunks) { total.set(c, off); off += c.length; }
+        return JSON.parse(new TextDecoder().decode(total));
+      } catch (e) {
+        console.warn('Decompress failed:', e.message);
+        return null;
       }
     }
-  }
 
-  function processDriverList(data) {
-    for (const [num, info] of Object.entries(data)) {
-      if (typeof info !== "object") continue;
-      const existing = state.drivers[num] || {};
-      state.drivers[num] = {
-        driverNumber: num,
-        nameAcronym:  info.Tla        || existing.nameAcronym  || num,
-        fullName:     info.FullName   || existing.fullName     || num,
-        teamColour:   info.TeamColour || existing.teamColour   || "888888",
-        teamName:     info.TeamName   || existing.teamName     || "",
-        headshotUrl:  info.HeadshotUrl || existing.headshotUrl || "",
-      };
+    // ════════════════════════════════════════════════════════════════════
+    // DATA PROCESSING
+    // ════════════════════════════════════════════════════════════════════
+
+    function processPositions(data) {
+      const entries = data?.Position?.[0]?.Entries ?? data?.Entries ?? data;
+      if (!entries || typeof entries !== 'object') return;
+
+      for (const [num, entry] of Object.entries(entries)) {
+        if (entry.X == null || entry.Y == null) continue;
+        const x = entry.X, y = entry.Y;
+        updateBounds(x, y);
+        state.positions[num] = { x, y, status: entry.Status || 'OnTrack' };
+
+        // Subsample for track outline (1 in 10)
+        if (Math.random() < 0.1) {
+          state.trackPoints.push([x, y]);
+          if (state.trackPoints.length > 50000) state.trackPoints.splice(0, 5000);
+        }
+      }
     }
-    renderTimingTower();
-  }
 
-  function processTimingData(data) {
-    const lines = data?.Lines || data;
-    for (const [num, info] of Object.entries(lines)) {
-      if (typeof info !== "object") continue;
-      state.timing[num] = {
-        ...(state.timing[num] || {}),
-        position: parseInt(info.Position) || state.timing[num]?.position || 99,
-        gap:      info.GapToLeader        || state.timing[num]?.gap      || "",
-        lapTime:  info.LastLapTime?.Value  || state.timing[num]?.lapTime  || "",
-      };
-    }
-    renderTimingTower();
-  }
-
-  function processTimingAppData(data) {
-    const lines = data?.Lines || data;
-    for (const [num, info] of Object.entries(lines)) {
-      if (typeof info !== "object") continue;
-      const stints = info.Stints;
-      if (!stints) continue;
-      const lastStint = Array.isArray(stints) ? stints[stints.length - 1] : Object.values(stints).pop();
-      if (lastStint) {
-        const raw = lastStint.Compound || "";
-        state.stints[num] = {
-          compound: (raw === "UNKNOWN" || raw === "") ? "-" : raw[0],
-          laps:     lastStint.TotalLaps || 0,
+    function processDriverList(data) {
+      for (const [num, info] of Object.entries(data)) {
+        if (typeof info !== 'object') continue;
+        const existing = state.drivers[num] || {};
+        state.drivers[num] = {
+          driverNumber: num,
+          nameAcronym: info.Tla || existing.nameAcronym || num,
+          fullName: info.FullName || existing.fullName || num,
+          teamColour: info.TeamColour || existing.teamColour || '888888',
+          teamName: info.TeamName || existing.teamName || '',
+          headshotUrl: info.HeadshotUrl || existing.headshotUrl || '',
         };
       }
-    }
-    renderTimingTower();
-  }
-
-  function processTrackStatus(data) {
-    const status = data?.Status;
-    const badge  = document.getElementById("track-status-badge");
-    const map = {
-      "1": ["All Clear",       "status-green"],
-      "2": ["Yellow Flag",     "status-yellow"],
-      "3": ["Flag",            "status-yellow"],
-      "4": ["Safety Car",      "status-sc"],
-      "5": ["Red Flag",        "status-red"],
-      "6": ["Virt. Safety Car","status-vsc"],
-      "7": ["Virt. Safety Car","status-vsc"],
-    };
-    const [label, cls] = map[status] || ["Unknown", "status-green"];
-    badge.textContent = label;
-    badge.className   = "";
-    badge.id          = "track-status-badge";
-    badge.classList.add(cls);
-  }
-
-  function processRaceControl(data) {
-    const messages = data?.Messages || (Array.isArray(data) ? data : Object.values(data));
-    if (!Array.isArray(messages)) return;
-    const container = document.getElementById("rc-messages");
-    const recent    = messages[messages.length - 1];
-    if (!recent?.Message) return;
-    const time = recent.Utc?.split("T")[1]?.split(".")[0] || "";
-    const flag = recent.Flag || "";
-    const div  = document.createElement("div");
-    div.className = `rc-msg rc-flag-${flag}`;
-    div.innerHTML = `<span class="rc-time">${time}</span><span class="rc-text">${recent.Message}</span>`;
-    container.prepend(div);
-    while (container.children.length > 50) container.removeChild(container.lastChild);
-  }
-
-  function processSessionInfo(data) {
-    const name = data?.Name || data?.Meeting?.Name || "";
-    if (name) {
-      document.getElementById("session-name").textContent = name;
-      const badge = document.getElementById("live-badge");
-      badge.textContent = "Live";
-      badge.classList.add("live");
-    }
-  }
-
-  function processLapCount(data) {
-    const current = data?.CurrentLap;
-    const total   = data?.TotalLaps;
-    if (current != null) {
-      document.getElementById("lap-counter").textContent =
-        total ? `LAP ${current}/${total}` : `LAP ${current}`;
-    }
-  }
-
-  // ── Timing Tower Render ──────────────────────────────────────────────────────
-  function renderTimingTower() {
-    const container = document.getElementById("timing-rows");
-    const sorted = Object.values(state.drivers).sort((a, b) => {
-      const pa = state.timing[a.driverNumber]?.position || 99;
-      const pb = state.timing[b.driverNumber]?.position || 99;
-      return pa - pb;
-    });
-
-    container.innerHTML = "";
-    for (const driver of sorted) {
-      const t        = state.timing[driver.driverNumber] || {};
-      const s        = state.stints[driver.driverNumber];
-      const color    = "#" + driver.teamColour;
-      const tyre     = s?.compound || "-";
-      const tyreClass = `tyre-${tyre}`;
-      const isLeader  = t.position === 1;
-
-      // Leader: no gap shown. Others: ensure a single "+" prefix.
-      const gapDisplay = isLeader ? "" : (t.gap ? "+" + t.gap.replace("+", "") : "");
-
-      const row = document.createElement("div");
-      row.className = "timing-row";
-      row.innerHTML = `
-        <div class="t-pos">${t.position || ""}</div>
-        <div class="t-num" style="background:${color}22;color:${color};border:1px solid ${color}44">${driver.driverNumber}</div>
-        <div class="t-name">${driver.nameAcronym}</div>
-        <div class="t-laptime">${t.lapTime || ""}</div>
-        <div class="t-gap">${gapDisplay}</div>
-        <div class="t-tyre ${tyreClass}">${tyre}</div>
-      `;
-      container.appendChild(row);
-    }
-  }
-
-  // ── SignalR Connection ───────────────────────────────────────────────────────
-  const TOPICS = [
-    "Heartbeat", "DriverList", "Position.z", "CarData.z",
-    "TimingData", "TimingAppData", "TrackStatus",
-    "RaceControlMessages", "SessionInfo", "LapCount",
-  ];
-
-  function setStatus(s, text) {
-    const dot = document.getElementById("status-dot");
-    const txt = document.getElementById("status-text");
-    const btn = document.getElementById("connect-btn");
-    dot.className  = s;
-    txt.textContent = text;
-    if (s === "connected")  { btn.textContent = "Disconnect"; btn.className = "connected"; }
-    else if (s === "connecting") { btn.textContent = "Connecting…"; btn.disabled = true; }
-    else { btn.textContent = "Connect"; btn.disabled = false; btn.className = ""; }
-  }
-
-  async function connectToF1() {
-    if (state.connected) { disconnect(); return; }
-    setStatus("connecting", "Negotiating…");
-    try {
-      const hub          = encodeURIComponent(JSON.stringify([{ name: "Streaming" }]));
-      const negotiateUrl = `${WORKER_URL}/signalr/negotiate?connectionData=${hub}&clientProtocol=1.5`;
-      const res          = await fetch(negotiateUrl);
-      const data         = await res.json();
-      const token        = encodeURIComponent(data.ConnectionToken);
-      const cookie       = encodeURIComponent(data._f1Cookie || "");
-      const wsBase       = WORKER_URL.replace(/^https?/, "wss").replace(/^http/, "ws");
-      const wsUrl        = `${wsBase}/signalr/connect?clientProtocol=1.5&transport=webSockets&connectionToken=${token}&connectionData=${hub}&f1cookie=${cookie}`;
-      const ws           = new WebSocket(wsUrl);
-      state.ws = ws;
-      ws.onopen    = () => { setStatus("connecting", "Subscribing…"); ws.send(JSON.stringify({ H: "Streaming", M: "Subscribe", A: [TOPICS], I: 1 })); };
-      ws.onmessage = (event) => handleMessage(event.data);
-      ws.onerror   = (e)     => { console.error("WebSocket error", e); setStatus("error", "Connection error"); };
-      ws.onclose   = ()      => { state.connected = false; setStatus("", "Disconnected"); };
-    } catch (e) {
-      console.error("Connection failed:", e);
-      setStatus("error", "Failed: " + e.message);
-    }
-  }
-
-  function disconnect() {
-    state.ws?.close();
-    state.connected = false;
-    setStatus("", "Disconnected");
-  }
-
-  async function handleMessage(raw) {
-    let data;
-    try { data = JSON.parse(raw); } catch { return; }
-    if (Object.keys(data).length === 0) return;
-
-    if (data.R && !state.connected) {
-      state.connected = true;
-      setStatus("connected", "Live");
-      const R = data.R;
-      if (R.DriverList)          processDriverList(R.DriverList);
-      if (R["Position.z"])       { const d = await decompress(R["Position.z"]); if (d) processPositions(d); }
-      if (R.TimingData)          processTimingData(R.TimingData);
-      if (R.TimingAppData)       processTimingAppData(R.TimingAppData);
-      if (R.TrackStatus)         processTrackStatus(R.TrackStatus);
-      if (R.RaceControlMessages) processRaceControl(R.RaceControlMessages);
-      if (R.SessionInfo)         processSessionInfo(R.SessionInfo);
-      if (R.LapCount)            processLapCount(R.LapCount);
+      renderTimingTower();
     }
 
-    if (data.M && Array.isArray(data.M)) {
-      for (const msg of data.M) {
-        if (msg.H !== "streaming" && msg.H !== "Streaming") continue;
-        if (msg.M !== "feed") continue;
-        const [topic, value] = msg.A;
-        await processTopic(topic, value);
+    function processTimingData(data) {
+      const lines = data?.Lines || data;
+      for (const [num, info] of Object.entries(lines)) {
+        if (typeof info !== 'object') continue;
+        state.timing[num] = {
+          ...(state.timing[num] || {}),
+          position: parseInt(info.Position) || state.timing[num]?.position || 99,
+          gap: info.GapToLeader || state.timing[num]?.gap || '',
+          lapTime: info.LastLapTime?.Value || state.timing[num]?.lapTime || '',
+          bestTime: info.BestLapTime?.Value || state.timing[num]?.bestTime || '',
+          inPit: info.InPit ?? state.timing[num]?.inPit ?? false,
+          pitOut: info.PitOut ?? state.timing[num]?.pitOut ?? false,
+        };
+      }
+      renderTimingTower();
+    }
+
+    function processTimingAppData(data) {
+      const lines = data?.Lines || data;
+      for (const [num, info] of Object.entries(lines)) {
+        if (typeof info !== 'object') continue;
+        const stints = info.Stints;
+        if (!stints) continue;
+        const lastStint = Array.isArray(stints)
+          ? stints[stints.length - 1]
+          : Object.values(stints).pop();
+        if (lastStint) {
+          const existing = state.stints[num] || {};
+          const raw = lastStint.Compound || '';
+          state.stints[num] = {
+            compound: (raw === 'UNKNOWN' || raw === '') ? (existing.compound || '-') : raw[0],
+            laps: lastStint.TotalLaps || existing.laps || 0,
+          };
+        }
+      }
+      renderTimingTower();
+    }
+
+    function processTrackStatus(data) {
+      const status = data?.Status;
+      const badge = document.getElementById('track-status-badge');
+      const map = {
+        '1': ['All Clear', 'status-green'],
+        '2': ['Yellow Flag', 'status-yellow'],
+        '3': ['Flag', 'status-yellow'],
+        '4': ['Safety Car', 'status-sc'],
+        '5': ['Red Flag', 'status-red'],
+        '6': ['Virt. Safety Car', 'status-vsc'],
+        '7': ['Virt. Safety Car', 'status-vsc'],
+      };
+      const [label, cls] = map[status] || ['Unknown', 'status-green'];
+      badge.textContent = label;
+      badge.className = '';
+      badge.id = 'track-status-badge';
+      badge.classList.add(cls);
+    }
+
+    function processRaceControl(data) {
+      const messages = data?.Messages || (Array.isArray(data) ? data : Object.values(data));
+      if (!Array.isArray(messages)) return;
+      const container = document.getElementById('rc-messages');
+      const recent = messages[messages.length - 1];
+      if (!recent?.Message) return;
+      const time = recent.Utc?.split('T')[1]?.split('.')[0] || '';
+      const flag = recent.Flag || '';
+      const div = document.createElement('div');
+      div.className = `rc-msg rc-flag-${flag}`;
+      div.innerHTML = `<span class="rc-time">${time}</span><span class="rc-text">${recent.Message}</span>`;
+      container.prepend(div);
+      while (container.children.length > 50) container.removeChild(container.lastChild);
+    }
+
+    function processSessionInfo(data) {
+      const name = data?.Name || data?.Meeting?.Name || '';
+      if (name) {
+        document.getElementById('session-name').textContent = name;
+        const badge = document.getElementById('live-badge');
+        badge.textContent = 'Live';
+        badge.classList.add('live');
       }
     }
-  }
 
-  async function processTopic(topic, value) {
-    switch (topic) {
-      case "DriverList":          processDriverList(value);          break;
-      case "TimingData":          processTimingData(value);          break;
-      case "TimingAppData":       processTimingAppData(value);       break;
-      case "TrackStatus":         processTrackStatus(value);         break;
-      case "RaceControlMessages": processRaceControl(value);         break;
-      case "SessionInfo":         processSessionInfo(value);         break;
-      case "LapCount":            processLapCount(value);            break;
-      case "Position.z": {
-        const d = await decompress(value);
-        if (d) processPositions(d);
-        break;
+    function processLapCount(data) {
+      const current = data?.CurrentLap;
+      const total = data?.TotalLaps;
+      if (current != null) {
+        document.getElementById('lap-counter').textContent =
+          total ? `LAP ${current}/${total}` : `LAP ${current}`;
       }
     }
-  }
 
-  // ── Start ────────────────────────────────────────────────────────────────────
-  requestAnimationFrame(draw);
-</script>
+    // ════════════════════════════════════════════════════════════════════
+    // TIMING TOWER RENDER
+    // ════════════════════════════════════════════════════════════════════
+
+    function renderTimingTower() {
+      const container = document.getElementById('timing-rows');
+      const sorted = Object.values(state.drivers).sort((a, b) => {
+        const pa = state.timing[a.driverNumber]?.position || 99;
+        const pb = state.timing[b.driverNumber]?.position || 99;
+        return pa - pb;
+      });
+
+      // Pre-build a list of gap-to-leader values in seconds so we can
+      // subtract adjacent entries to get the gap to the car ahead.
+      function parseGapSecs(gapStr) {
+        if (!gapStr) return null;
+        const clean = gapStr.replace('+', '').trim();
+        if (/L$/i.test(clean)) return null; // lapped — can't compute meaningful diff
+        const val = parseFloat(clean);
+        return isNaN(val) ? null : val;
+      }
+
+      // Build an index of { driverNumber → gapToLeaderSeconds } for the sorted field
+      const gapToLeaderSecs = {};
+      for (const driver of sorted) {
+        const t = state.timing[driver.driverNumber] || {};
+        gapToLeaderSecs[driver.driverNumber] = parseGapSecs(t.gap);
+      }
+
+      container.innerHTML = '';
+      sorted.forEach((driver, i) => {
+        const t = state.timing[driver.driverNumber] || {};
+        const s = state.stints[driver.driverNumber];
+        const color = '#' + driver.teamColour;
+        const tyre = s?.compound || '-';
+        const tyreClass = `tyre-${tyre}`;
+        const isLeader = t.position === 1;
+
+        // Gap to driver directly ahead
+        let gapDisplay = '';
+        if (!isLeader) {
+          const myGap = gapToLeaderSecs[driver.driverNumber];
+          const aheadDriver = sorted[i - 1];
+          const aheadGap = aheadDriver
+            ? gapToLeaderSecs[aheadDriver.driverNumber]
+            : null;
+
+          if (myGap !== null && aheadGap !== null) {
+            const diff = myGap - aheadGap;
+            gapDisplay = '+' + diff.toFixed(3);
+          } else if (t.gap) {
+            // Fallback: lapped driver — just show raw gap as-is
+            gapDisplay = '+' + t.gap.replace('+', '');
+          }
+        }
+
+        // Lap time / status label
+        let lapTimeDisplay;
+        if (t.inPit) {
+          lapTimeDisplay = `<span style="color:#666;font-size:9px;letter-spacing:0.08em">IN PIT</span>`;
+        } else if (t.pitOut) {
+          lapTimeDisplay = `<span style="color:#ffd700;font-size:9px;letter-spacing:0.08em">OUT LAP</span>`;
+        } else if (!t.bestTime && !t.lapTime) {
+          lapTimeDisplay = `<span style="color:#444;font-size:9px;letter-spacing:0.08em">NO TIME</span>`;
+        } else {
+          lapTimeDisplay = t.lapTime || '';
+        }
+
+        const row = document.createElement('div');
+        row.className = 'timing-row';
+        row.innerHTML = `
+      <div class="t-pos">${t.position || ''}</div>
+      <div class="t-num" style="background:${color}22;color:${color};border:1px solid ${color}44">${driver.driverNumber}</div>
+      <div class="t-name">${driver.nameAcronym}</div>
+      <div class="t-laptime">${lapTimeDisplay}</div>
+      <div class="t-gap">${gapDisplay}</div>
+      <div class="t-tyre ${tyreClass}">${tyre}</div>
+    `;
+        container.appendChild(row);
+      });
+    }
+
+    // ════════════════════════════════════════════════════════════════════
+    // SIGNALR CONNECTION
+    // ════════════════════════════════════════════════════════════════════
+
+    const TOPICS = [
+      'Heartbeat', 'DriverList', 'Position.z', 'CarData.z',
+      'TimingData', 'TimingAppData', 'TrackStatus',
+      'RaceControlMessages', 'SessionInfo', 'LapCount',
+    ];
+
+    function setStatus(s, text) {
+      const dot = document.getElementById('status-dot');
+      const txt = document.getElementById('status-text');
+      const btn = document.getElementById('connect-btn');
+      dot.className = s;
+      txt.textContent = text;
+      if (s === 'connected') { btn.textContent = 'Disconnect'; btn.className = 'connected'; btn.disabled = false; }
+      else if (s === 'connecting') { btn.textContent = 'Connecting…'; btn.disabled = true; btn.className = ''; }
+      else { btn.textContent = 'Connect'; btn.disabled = false; btn.className = ''; }
+    }
+
+    async function connectToF1() {
+      if (state.connected) { disconnect(); return; }
+
+      setStatus('connecting', 'Negotiating…');
+      try {
+        const hub = encodeURIComponent(JSON.stringify([{ name: 'Streaming' }]));
+        const negotiateUrl = `${WORKER_URL}/signalr/negotiate?connectionData=${hub}&clientProtocol=1.5`;
+        const res = await fetch(negotiateUrl);
+        const data = await res.json();
+        const token = encodeURIComponent(data.ConnectionToken);
+        const cookie = encodeURIComponent(data._f1Cookie || '');
+        const wsBase = WORKER_URL.replace(/^https?/, 'wss').replace(/^http/, 'ws');
+        const wsUrl = `${wsBase}/signalr/connect?clientProtocol=1.5&transport=webSockets&connectionToken=${token}&connectionData=${hub}&f1cookie=${cookie}`;
+
+        const ws = new WebSocket(wsUrl);
+        state.ws = ws;
+
+        ws.onopen = () => {
+          setStatus('connecting', 'Subscribing…');
+          ws.send(JSON.stringify({ H: 'Streaming', M: 'Subscribe', A: [TOPICS], I: 1 }));
+          // Also attempt to load track outline from OpenF1 REST API (hybrid approach)
+          fetchOpenF1TrackOutline();
+        };
+
+        ws.onmessage = event => handleMessage(event.data);
+        ws.onerror = () => setStatus('error', 'Connection error');
+        ws.onclose = () => { state.connected = false; setStatus('', 'Disconnected'); };
+
+      } catch (e) {
+        setStatus('error', 'Failed: ' + e.message);
+      }
+    }
+
+    function disconnect() {
+      state.ws?.close();
+      state.connected = false;
+      state.openF1Attempted = false; // allow retry on next connect
+      setStatus('', 'Disconnected');
+    }
+
+    async function handleMessage(raw) {
+      let data;
+      try { data = JSON.parse(raw); } catch { return; }
+      if (Object.keys(data).length === 0) return; // keepalive ping
+
+      // ── Initial snapshot (arrives once after Subscribe) ─────────
+      if (data.R && !state.connected) {
+        state.connected = true;
+        setStatus('connected', 'Live');
+        const R = data.R;
+        if (R.DriverList) processDriverList(R.DriverList);
+        if (R['Position.z']) { const d = await decompress(R['Position.z']); if (d) processPositions(d); }
+        if (R.TimingData) processTimingData(R.TimingData);
+        if (R.TimingAppData) processTimingAppData(R.TimingAppData);
+        if (R.TrackStatus) processTrackStatus(R.TrackStatus);
+        if (R.RaceControlMessages) processRaceControl(R.RaceControlMessages);
+        if (R.SessionInfo) processSessionInfo(R.SessionInfo);
+        if (R.LapCount) processLapCount(R.LapCount);
+      }
+
+      // ── Incremental updates ──────────────────────────────────────
+      if (data.M && Array.isArray(data.M)) {
+        for (const msg of data.M) {
+          if (msg.H !== 'streaming' && msg.H !== 'Streaming') continue;
+          if (msg.M !== 'feed') continue;
+          const [topic, value] = msg.A;
+          await processTopic(topic, value);
+        }
+      }
+    }
+
+    async function processTopic(topic, value) {
+      switch (topic) {
+        case 'DriverList': processDriverList(value); break;
+        case 'TimingData': processTimingData(value); break;
+        case 'TimingAppData': processTimingAppData(value); break;
+        case 'TrackStatus': processTrackStatus(value); break;
+        case 'RaceControlMessages': processRaceControl(value); break;
+        case 'SessionInfo': processSessionInfo(value); break;
+        case 'LapCount': processLapCount(value); break;
+        case 'Position.z': {
+          const d = await decompress(value);
+          if (d) processPositions(d);
+          break;
+        }
+      }
+    }
+
+    // ════════════════════════════════════════════════════════════════════
+    // START
+    // ════════════════════════════════════════════════════════════════════
+    requestAnimationFrame(draw);
+  </script>
 </body>
+
 </html>
